@@ -32,6 +32,11 @@ bld/
 [Ll]ogs/
 /*/bin/*
 /*/obj/*
+/*/*/bin/*
+/*/*/obj/*
+
+/*/*/*/bin/*
+/*/*/*/obj/*
 bin
 obj
 obj/*
