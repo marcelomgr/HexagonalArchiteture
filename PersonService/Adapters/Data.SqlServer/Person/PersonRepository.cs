@@ -12,7 +12,9 @@ namespace Data.SqlServer.Person
         }
         public async Task<int> Create(Domain.Entities.Person person)
         {
+            person.Created = DateTime.Now;
             _gdlDbContext.Persons.Add(person);
+
             await _gdlDbContext.SaveChangesAsync();
             return person.Id;
         }

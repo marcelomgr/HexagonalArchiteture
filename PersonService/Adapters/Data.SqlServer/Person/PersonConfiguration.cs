@@ -8,7 +8,7 @@ namespace Data.SqlServer.Person
     {
         public void Configure(EntityTypeBuilder<Entities.Person> builder)
         {
-            
+            builder.HasKey(x => x.Id);
         }
     }
 }

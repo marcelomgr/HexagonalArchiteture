@@ -5,8 +5,9 @@ namespace Domain.Entities
     public class Person
     {
         public int Id { get; set; }
+        public DateTime Created { get; set; }
         public string Name { get; set; }
-        public int? MotherName { get; set; }
+        public string? MotherName { get; set; }
         public string? Rg { get; set; }
         public string Cpf { get; set; }
         public string? CondemnedRegister { get; set; }
@@ -19,8 +20,8 @@ namespace Domain.Entities
         private void ValidateState()
         {
 
-            if (string.IsNullOrEmpty(Name) ||
-                IdPersonType == 0)
+            if (string.IsNullOrEmpty(Name))
+                //||  IdPersonType == 0)
             {
                 throw new Exception();
             }

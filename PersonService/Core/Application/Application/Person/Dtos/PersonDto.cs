@@ -8,23 +8,32 @@ namespace Application.Person.Dtos
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Surname { get; set; }
-        public string Email { get; set; }
-        public string IdNumber { get; set; }
-        public int IdTypeCode { get; set; }
+        public DateTime Created { get; set; }
+        public string? MotherName { get; set; }
+        public string? Rg { get; set; }
+        public string Cpf { get; set; }
+        public string? CondemnedRegister { get; set; }
+        public string? CondemnationArticle { get; set; }
+        public string? CondemnationProccess { get; set; }
+        public string? CondemnationCourt { get; set; }
+        public DateTime? CondemnationDate { get; set; }
+        public int IdPersonType { get; set; }
         public static Entities.Person MapToEntity(PersonDto personDto)
         {
             return new Entities.Person
             {
                 Id = personDto.Id,
+                Created = personDto.Created,
                 Name = personDto.Name,
-                Surname = personDto.Surname,
-                Email = personDto.Email,
-                //DocumentId = new Domain.ValueObjects.PersonId
-                //{
-                //    IdNumber = guestDTO.IdNumber,
-                //    DocumentType = (DocumentType)guestDTO.IdTypeCode
-                //}
+                MotherName = personDto.MotherName,
+                Rg = personDto.Rg,
+                Cpf = personDto.Cpf,
+                CondemnedRegister = personDto.CondemnedRegister,
+                CondemnationArticle = personDto.CondemnationArticle,
+                CondemnationProccess = personDto.CondemnationProccess,
+                CondemnationCourt = personDto.CondemnationCourt,
+                CondemnationDate = personDto.CondemnationDate,
+                IdPersonType = personDto.IdPersonType,
             };
         }
 
@@ -33,11 +42,17 @@ namespace Application.Person.Dtos
             return new PersonDto
             {
                 Id = person.Id,
-                Email = person.Email,
-                //IdNumber = person.DocumentId.IdNumber,
-                //IdTypeCode = (int)person.DocumentId.DocumentType,
+                Created = person.Created,
                 Name = person.Name,
-                Surname = person.Surname,
+                MotherName = person.MotherName,
+                Rg = person.Rg,
+                Cpf = person.Cpf,
+                CondemnedRegister = person.CondemnedRegister,
+                CondemnationArticle = person.CondemnationArticle,
+                CondemnationProccess = person.CondemnationProccess,
+                CondemnationCourt = person.CondemnationCourt,
+                CondemnationDate = person.CondemnationDate,
+                IdPersonType = person.IdPersonType,
             };
         }
     }

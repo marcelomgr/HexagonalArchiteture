@@ -2,7 +2,7 @@
 {
     public enum ErrorCodes
     {
-        // Guests related codes 1 to 500
+        // Persons related codes 1 to 500
         NOT_FOUND = 1,
     }
 

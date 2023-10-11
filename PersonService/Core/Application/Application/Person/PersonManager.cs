@@ -50,7 +50,7 @@ namespace Application
                 {
                     Success = false,
                     ErrorCode = ErrorCodes.NOT_FOUND,
-                    Message = "No Guest record was found with the given Id"
+                    Message = "No Person record was found with the given Id"
                 };
             }
 
