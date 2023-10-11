@@ -24,9 +24,12 @@ namespace Data.SqlServer.Person
             return _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
         }
 
-        public Task Update(Domain.Entities.Person person)
+        public async Task Update(Domain.Entities.Person person)
         {
-            throw new NotImplementedException();
+            _gdlDbContext.Persons.Attach(person);
+            _gdlDbContext.Entry(person).State = EntityState.Modified;
+
+            await _gdlDbContext.SaveChangesAsync();
         }
     }
 }

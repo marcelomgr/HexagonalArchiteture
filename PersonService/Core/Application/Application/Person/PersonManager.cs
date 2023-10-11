@@ -2,6 +2,7 @@
 using Application.Person.Ports;
 using Application.Person.Requests;
 using Application.Responses;
+using Domain.Person.Exceptions;
 using Domain.Person.Ports;
 
 namespace Application
@@ -29,13 +30,31 @@ namespace Application
                     Success = true,
                 };
             }
+            catch (MissingRequiredInformationException e)
+            {
+                return new PersonResponse
+                {
+                    Success = false,
+                    ErrorCode = ErrorCodes.MISSING_REQUIRED_INFORMATION,
+                    Message = "Informações obrigatórias não enviadas"
+                };
+            }
+            catch (InvalidCpfException e)
+            {
+                return new PersonResponse
+                {
+                    Success = false,
+                    ErrorCode = ErrorCodes.INVALID_CPF,
+                    Message = "O Cpf enviado não é válido"
+                };
+            }
             catch (Exception e)
             {
                 return new PersonResponse
                 {
                     Success = false,
-                    ErrorCode = ErrorCodes.NOT_FOUND,
-                    Message = "The ID passed is not valid"
+                    ErrorCode = ErrorCodes.COULD_NOT_STORE_DATA,
+                    Message = "Ocorreu um erro ao salvar no DB"
                 };
             }
         }
@@ -50,7 +69,7 @@ namespace Application
                 {
                     Success = false,
                     ErrorCode = ErrorCodes.NOT_FOUND,
-                    Message = "No Person record was found with the given Id"
+                    Message = "Não foi encontrada uma pessoa com esse Id"
                 };
             }
 

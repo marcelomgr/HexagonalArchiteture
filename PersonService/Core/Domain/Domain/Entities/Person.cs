@@ -1,4 +1,5 @@
-﻿using Domain.Person.Ports;
+﻿using Domain.Person.Exceptions;
+using Domain.Person.Ports;
 
 namespace Domain.Entities
 {
@@ -21,14 +22,13 @@ namespace Domain.Entities
         {
 
             if (string.IsNullOrEmpty(Name))
-                //||  IdPersonType == 0)
             {
-                throw new Exception();
+                throw new MissingRequiredInformationException();
             }
 
             if (Utils.ValidateCpf(this.Cpf) == false)
             {
-                throw new Exception();
+                throw new InvalidCpfException();
             }
         }
 
