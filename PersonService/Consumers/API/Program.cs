@@ -1,49 +1,32 @@
 using Application;
-using Application.Booking;
-using Application.Booking.Ports;
-using Application.Payment;
-using Application.Ports;
-using Application.Room;
-using Application.Room.Ports;
-using Data;
-using Data.Booking;
-using Data.Guest;
-using Data.Room;
-using Domain.Booking.Ports;
-using Domain.Ports;
-using Domain.Room.Ports;
+using Application.Person.Ports;
+using Data.SqlServer;
+using Data.SqlServer.Person;
+using Domain.Person.Ports;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
-using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddMediatR(typeof(BookingManager));
+//builder.Services.AddMediatR(typeof(PersonManager));
 
 # region IoC
-builder.Services.AddScoped<IGuestManager, GuestManager>();
-builder.Services.AddScoped<IGuestRepository, GuestRepository>();
-builder.Services.AddScoped<IRoomManager, RoomManager>();
-builder.Services.AddScoped<IRoomRepository, RoomRepository>();
-builder.Services.AddScoped<IBookingManager, BookingManager>();
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-//builder.Services.AddScoped<IPaymentProcessorFactory, PaymentProcessorFactory>();
+builder.Services.AddScoped<IPersonManager, PersonManager>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 # endregion
 
 # region DB wiring up
 var connectionString = builder.Configuration.GetConnectionString("Main");
-builder.Services.AddDbContext<HotelDbContext>(
+builder.Services.AddDbContext<GdlDbContext>(
     options => options.UseSqlServer(connectionString));
 # endregion
-
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 builder.Services.AddControllersWithViews()
                 .AddJsonOptions(options =>
