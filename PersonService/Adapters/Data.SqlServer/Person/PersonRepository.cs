@@ -19,10 +19,7 @@ namespace Data.SqlServer.Person
             return person.Id;
         }
 
-        public Task<Domain.Entities.Person> Get(int Id)
-        {
-            return _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
-        }
+        public Task<Domain.Entities.Person?> Get(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
 
         public async Task Update(Domain.Entities.Person person)
         {
