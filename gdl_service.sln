@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "PersonServic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "PersonService\Core\Domain\Domain\Domain.csproj", "{2989EC8F-2628-4FD2-812B-973C96E2BA06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.SqlServer", "PersonService\Adapters\Data.SqlServer\Data.SqlServer.csproj", "{7D9287DA-8DBA-457C-90BC-BA8A88328BF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data.SqlServer", "PersonService\Adapters\Data.SqlServer\Data.SqlServer.csproj", "{7D9287DA-8DBA-457C-90BC-BA8A88328BF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVC", "PersonService\Consumers\MVC\MVC.csproj", "{E9C736C4-5E38-4FA9-97F2-DB8C56E4D77C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +111,10 @@ Global
 		{7D9287DA-8DBA-457C-90BC-BA8A88328BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D9287DA-8DBA-457C-90BC-BA8A88328BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D9287DA-8DBA-457C-90BC-BA8A88328BF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9C736C4-5E38-4FA9-97F2-DB8C56E4D77C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9C736C4-5E38-4FA9-97F2-DB8C56E4D77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9C736C4-5E38-4FA9-97F2-DB8C56E4D77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9C736C4-5E38-4FA9-97F2-DB8C56E4D77C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +146,7 @@ Global
 		{B3DD2514-34E1-4B0C-909A-51877E302B74} = {FAE0001F-ECE2-41BC-A947-7CE6285C4DFC}
 		{2989EC8F-2628-4FD2-812B-973C96E2BA06} = {5A00B7DC-09A6-4715-B479-914D2589A860}
 		{7D9287DA-8DBA-457C-90BC-BA8A88328BF3} = {F1EBD42F-DDBA-4AA0-9715-2A06822C006D}
+		{E9C736C4-5E38-4FA9-97F2-DB8C56E4D77C} = {0E40BB0B-2702-4925-8C34-CD57D17CF9A8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0EA22528-B7A6-4957-9A57-D2BA8D40E259}
