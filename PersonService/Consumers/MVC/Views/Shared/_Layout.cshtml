@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MVCs</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/all.min.css" asp-append-version="true">
@@ -12,26 +12,32 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar d-flex flex-column">
                 <div class="position-sticky">
                     <img src="~/img/brasaoPoliciaCientifica_color.png" alt="Logo" class="img-fluid" />
                     <hr />
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link active" href="#">
-                                <i class="fas fa-home"></i>&nbsp; Início <!-- Ícone de casa -->
+                                <i class="fas fa-home"></i>&nbsp; Início
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">
-                                <i class="fas fa-user"></i>&nbsp; Gerenciamento <!-- Ícone de usuário -->
+                                <i class="fas fa-user"></i>&nbsp; Gerenciamento
                             </a>
                         </li>
-                        <!-- Adicione mais itens de menu conforme necessário -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-sign-out-alt"></i>&nbsp; Sair
+                            </a>
+                        </li>
                     </ul>
-                    <div class="sidebar-footer mt-auto">
+                    <!-- Footer no menu lateral -->
+                    @* <div class="mt-auto"> *@
+                    @* <div class="custom-sidebar-footer">
                         <small>&copy; 2023 - MVC - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacys</a></small>
-                    </div>
+                    </div> *@
                 </div>
             </nav>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
