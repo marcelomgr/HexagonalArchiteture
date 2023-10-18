@@ -19,7 +19,26 @@ namespace Data.SqlServer.Person
             return person.Id;
         }
 
-        public Task<Domain.Entities.Person?> Get(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
+        public Task<Domain.Entities.Person?> GetById(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
+        public async Task<List<Domain.Entities.Person>> Get(Domain.Entities.Person person)
+        {
+            // Comece com uma consulta que inclui todos os registros.
+            var query = _gdlDbContext.Persons.AsQueryable();
+
+            // Aplique critérios de pesquisa apenas se os campos não forem nulos ou vazios.
+            if (person.Id != 0)
+            {
+                query = query.Where(g => g.Id == person.Id);
+            }
+
+            if (!string.IsNullOrEmpty(person.Name))
+            {
+                query = query.Where(g => g.Name == person.Name);
+            }
+
+            // Execute a consulta e retorne os resultados.
+            return query.ToList();
+        }
 
         public async Task Update(Domain.Entities.Person person)
         {

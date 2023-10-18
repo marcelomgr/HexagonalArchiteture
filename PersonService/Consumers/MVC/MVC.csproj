@@ -10,4 +10,18 @@
     <Folder Include="wwwroot\webfonts\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\js\person.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Adapters\Data.SqlServer\Data.SqlServer.csproj" />
+    <ProjectReference Include="..\..\Core\Application\Application\Application.csproj" />
+  </ItemGroup>
+
 </Project>

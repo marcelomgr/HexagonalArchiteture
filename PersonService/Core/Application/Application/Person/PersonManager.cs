@@ -1,6 +1,7 @@
 ﻿using Application.Person.Dtos;
 using Application.Person.Ports;
 using Application.Person.Requests;
+using Application.Person.Responses;
 using Application.Responses;
 using Domain.Person.Exceptions;
 using Domain.Person.Ports;
@@ -59,9 +60,9 @@ namespace Application
             }
         }
 
-        public async Task<PersonResponse> GetPerson(int personId)
+        public async Task<PersonResponse> GetPersonById(int personId)
         {
-            var person = await _personRepository.Get(personId);
+            var person = await _personRepository.GetById(personId);
 
             if (person == null)
             {
@@ -76,6 +77,35 @@ namespace Application
             return new PersonResponse
             {
                 Data = PersonDto.MapToDto(person),
+                Success = true,
+            };
+        }
+
+        public async Task<PersonResponseList> GetPersons(PersonDto request)
+        {
+            var persons = await _personRepository.Get(PersonDto.MapToEntity(request));
+            
+            if (persons == null || persons.Count() == 0)
+            {
+                return new PersonResponseList
+                {
+                    Success = false,
+                    ErrorCode = ErrorCodes.NOT_FOUND,
+                    Message = "Não foram encontrados resultados para essa busca"
+                };
+            }
+
+            List<PersonDto> personsDto = new List<PersonDto>();
+
+            foreach (var item in persons)
+            {
+                PersonDto dto = PersonDto.MapToDto(item);
+                personsDto.Add(dto);
+            }
+
+            return new PersonResponseList
+            {
+                Data = personsDto,
                 Success = true,
             };
         }

@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Adapters\Data.SqlServer\Data.SqlServer.csproj" />
     <ProjectReference Include="..\..\Core\Application\Application\Application.csproj" />
+    <ProjectReference Include="..\MVC\MVC.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,89 @@
 ﻿@page
-@model MVC.Views.Person.IndexModel
-@{
-}
-person
+@model MVC.Controllers.PersonController
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/all.min.css" asp-append-version="true">
+<link rel="stylesheet" type="text/css" href="~/lib/datatables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="~/lib/jquery-ui/css/jquery-ui.css" >
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-ui/js/jquery-ui.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+<script src="~/js/person.js" asp-append-version="true"></script>
+
+
+<div class="container">
+    <h1 class="mt-4">Pesquisa de Pessoas</h1>
+
+    <!-- Seção de Filtros -->
+    <div class="card mt-4">
+        <div class="card-header">
+            Filtros
+        </div>
+        <div class="card-body">
+            <form id="searchForm">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>ID:</label>
+                        <input type="text" id="Id" name="Id" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Nome:</label>
+                        <input type="text" id="Name" name="Name" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Nome da Mãe:</label>
+                        <input type="text" id="MotherName" name="MotherName" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label>RG:</label>
+                        <input type="text" id="Rg" name="Rg" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>CPF:</label>
+                        <input type="text" id="Cpf" name="Cpf" class="form-control">
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-secondary">Voltar</button>
+                    <div class="d-flex justify-content-between">
+                        <button type="reset" class="btn btn-secondary me-2">Limpar</button>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+   @*  <div id="loading-spinner" class="d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div> *@
+    <div id="loading-spinner" class="d-none">
+        <div class="spinner-border text-primary" role="status" style="width: 300rem; height: 300rem;">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+    </div>
+    <br />
+
+    <table id="dataTable" class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Nome da Mãe</th>
+                <th>CPF</th>
+                <th>RG</th>
+                <th>Data de Criação</th>
+                <!-- Outros cabeçalhos de coluna -->
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>

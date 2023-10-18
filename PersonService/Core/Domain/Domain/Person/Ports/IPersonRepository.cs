@@ -2,7 +2,8 @@
 {
     public interface IPersonRepository
     {
-        Task<Entities.Person?> Get(int Id);
+        Task<Entities.Person?> GetById(int Id);
+        Task<List<Entities.Person>> Get(Entities.Person person);
         Task<int> Create(Entities.Person person);
         Task Update(Entities.Person person);
     }
