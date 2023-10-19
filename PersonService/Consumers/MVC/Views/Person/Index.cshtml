@@ -7,31 +7,35 @@
 <link rel="stylesheet" type="text/css" href="~/lib/datatables/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="~/lib/jquery-ui/css/jquery-ui.css">
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
 <script src="~/lib/jquery-ui/js/jquery-ui.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+
 <script src="~/js/person.js" asp-append-version="true"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
 
 <div class="container">
-    @* <h1 class="mt-4">Pesquisa de Pessoas</h1>
-    <button class="btn btn-primary float-right">Meu Botão</button> *@
 
-
+    <!-- Seção Header -->
     <div class="row">
         <div class="col-6">
             <h1 class="mt-4">Pesquisa de Pessoas</h1>
         </div>
         <div class="col-6 text-right" style="text-align: -webkit-right;">
-            <button id="btnCadastroModal" class="btn btn-primary mt-4" data-toggle="modal" data-target="#myModal">
+            <button id="btnCadastroModal" class="btn btn-primary mt-4" data-toggle="modal" data-target="#personSaveModal">
                 <i class="fas fa-plus-circle"></i> Cadastrar
             </button>
         </div>
     </div>
 
 
-    <!-- Seção de Filtros -->
+    <!-- Seção Filtros -->
     <div class="card mt-4">
         <div class="card-header">
             Filtros
@@ -59,10 +63,12 @@
                     </div>
                     <div class="col-md-4">
                         <label>CPF:</label>
-                        <input type="text" id="Cpf" name="Cpf" class="form-control">
+                        <input type="text" id="Cpf" name="Cpf" class="form-control cpf">
                     </div>
                 </div>
                 <hr>
+
+                <!-- Botões de Ação -->
                 <div class="d-flex justify-content-between">
                     <button class="btn btn-secondary" onclick="window.location.href='@Url.Action("Index", "Home")'">
                         <i class="fas fa-arrow-left"></i> Voltar
@@ -85,14 +91,9 @@
         </div>
     </div>
 
-
-    @* <div id="loading-spinner" class="d-none">
-    <div class="spinner-border text-primary" role="status" style="width: 300rem; height: 300rem;">
-    <span class="visually-hidden">Carregando...</span>
-    </div>
-    </div> *@
     <br />
 
+    <!-- Grid Resultados -->
     <table id="dataTable" class="table table-striped">
         <thead>
             <tr>
@@ -102,48 +103,70 @@
                 <th>CPF</th>
                 <th>RG</th>
                 <th>Data de Criação</th>
-                <!-- Outros cabeçalhos de coluna -->
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal de Salvamento -->
+    <div class="modal fade" id="personSaveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Cadastrar Usuário</h5>
+                    <h5 class="modal-title" id="SaveTitleModal">Cadastrar Usuário</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Insira seus campos de formulário aqui -->
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label>ID:</label>
-                            <input type="text" id="IdModal" name="IdModal" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label>Nome:</label>
-                            <input type="text" id="NameModal" name="NameModal" class="form-control">
-                        </div>
-                        <div class="col-md-4">
-                            <label>Nome da Mãe:</label>
-                            <input type="text" id="MotherNameModal" name="MotherNameModal" class="form-control">
-                        </div>
-                    </div>
+                    <form id="SaveForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <input type="hidden" id="hdnId" name="hdnId" value="0">
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label>RG:</label>
-                            <input type="text" id="RgModal" name="RgModal" class="form-control">
+                                <label>Nome:</label>
+                                <input type="text" id="NameSave" name="NameSave" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Nome da Mãe:</label>
+                                <input type="text" id="MotherNameSave" name="MotherNameSave" class="form-control">
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label>CPF:</label>
-                            <input type="text" id="CpfModal" name="CpfModal" class="form-control">
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>RG:</label>
+                                <input type="text" id="RgSave" name="RgSave" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label>CPF:</label>
+                                <input type="text" id="CpfSave" name="CpfSave" class="form-control cpf">
+                            </div>
                         </div>
-                    </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Artigo Condenação:</label>
+                                <input type="text" id="ArticleSave" name="ArticleSave" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Processo Condenação:</label>
+                                <input type="text" id="ProccessSave" name="ProccessSave" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Vara Criminal Condenação:</label>
+                                <input type="text" id="CourtSave" name="CourtSave" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Matrícula Condenado:</label>
+                                <input type="text" id="RegisterSave" name="RegisterSave" class="form-control">
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer" style="display: block;">
                     <div class="d-flex justify-content-between">
@@ -151,7 +174,7 @@
                             <i class="fas fa-times"></i> Fechar
                         </button>
                         <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary ml-auto me-2">
+                            <button type="submit" class="btn btn-primary ml-auto me-2" id="btnSave">
                                 <i class="fas fa-check"></i> Cadastrar
                             </button>
                         </div>
@@ -160,4 +183,55 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Visualização -->
+    <div class="modal fade" id="personDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes da Pessoa</h5>
+                    <button type="button" class="closeDetails" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Nome</th>
+                                <td id="nameView"></td>
+                                <th scope="row">Artigo de Condenação</th>
+                                <td id="ArticleView"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">RG</th>
+                                <td id="rgView"></td>
+                                <th scope="row">Tribunal de Condenação</th>
+                                <td id="CourtView"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">CPF</th>
+                                <td id="cpfView" class="cpf"></td>
+                                <th scope="row">Data de Condenação</th>
+                                <td id="DateView"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Nome da Mãe</th>
+                                <td id="motherNameView"></td>
+                                <th scope="row">Processo de Condenação</th>
+                                <td id="ProccessView"></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Data de Criação</th>
+                                <td id="createdView"></td>
+                                <th scope="row">Registro do Condenado</th>
+                                <td id="RegisterView"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

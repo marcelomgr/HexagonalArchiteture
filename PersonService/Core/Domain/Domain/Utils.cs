@@ -4,32 +4,45 @@
     {
         public static bool ValidateCpf(string cpf)
         {
-            if (string.IsNullOrWhiteSpace(cpf))
-                return false;
+            // Remover caracteres não numéricos e verificar o comprimento
+            int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
+            int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
 
             cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-
-            if (cpf.Length != 11 || !long.TryParse(cpf, out long numericCpf))
+            if (cpf.Length != 11)
                 return false;
 
-            long sum = 0;
+            for (int j = 0; j < 10; j++)
+                if (j.ToString().PadLeft(11, char.Parse(j.ToString())) == cpf)
+                    return false;
+
+            string tempCpf = cpf.Substring(0, 9);
+            int soma = 0;
+
             for (int i = 0; i < 9; i++)
-            {
-                sum += numericCpf / (long)Math.Pow(10, 8 - i) % 10 * (9 - i);
-            }
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador1[i];
 
-            long remainder = (sum % 11) % 10;
-            if (numericCpf / 10 % 10 != remainder)
-                return false;
+            int resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
 
-            sum = 0;
+            string digito = resto.ToString();
+            tempCpf = tempCpf + digito;
+            soma = 0;
             for (int i = 0; i < 10; i++)
-            {
-                sum += numericCpf / (long)Math.Pow(10, 9 - i) % 10 * (10 - i);
-            }
+                soma += int.Parse(tempCpf[i].ToString()) * multiplicador2[i];
 
-            remainder = (sum % 11) % 10;
-            return numericCpf % 10 == remainder;
+            resto = soma % 11;
+            if (resto < 2)
+                resto = 0;
+            else
+                resto = 11 - resto;
+
+            digito = digito + resto.ToString();
+
+            return cpf.EndsWith(digito);
         }
     }
 }

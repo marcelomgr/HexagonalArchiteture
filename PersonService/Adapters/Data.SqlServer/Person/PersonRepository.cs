@@ -47,10 +47,25 @@ namespace Data.SqlServer.Person
 
         public async Task Update(Domain.Entities.Person person)
         {
-            _gdlDbContext.Persons.Attach(person);
-            _gdlDbContext.Entry(person).State = EntityState.Modified;
+            var existingPerson = await GetById(person.Id);
 
-            await _gdlDbContext.SaveChangesAsync();
+            if (existingPerson != null)
+            {
+                existingPerson.Rg = person.Rg;
+                existingPerson.Cpf = person.Cpf;
+                existingPerson.Name = person.Name;
+                existingPerson.MotherName = person.MotherName;
+                existingPerson.CondemnationDate = person.CondemnationDate;
+                existingPerson.CondemnedRegister = person.CondemnedRegister;
+                existingPerson.CondemnationCourt = person.CondemnationCourt;
+                existingPerson.CondemnationArticle = person.CondemnationArticle;
+                existingPerson.CondemnationProccess = person.CondemnationProccess;
+
+                // Define o estado da entidade como modificada
+                _gdlDbContext.Entry(existingPerson).State = EntityState.Modified;
+
+                await _gdlDbContext.SaveChangesAsync();
+            }
         }
     }
 }
