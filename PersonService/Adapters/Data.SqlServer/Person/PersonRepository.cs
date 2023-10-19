@@ -22,21 +22,26 @@ namespace Data.SqlServer.Person
         public Task<Domain.Entities.Person?> GetById(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
         public async Task<List<Domain.Entities.Person>> Get(Domain.Entities.Person person)
         {
-            // Comece com uma consulta que inclui todos os registros.
+            // Consulta incluindo todos os registros.
             var query = _gdlDbContext.Persons.AsQueryable();
 
-            // Aplique critérios de pesquisa apenas se os campos não forem nulos ou vazios.
+            // Critérios de pesquisa apenas se os campos não forem nulos ou vazios.
             if (person.Id != 0)
-            {
                 query = query.Where(g => g.Id == person.Id);
-            }
 
             if (!string.IsNullOrEmpty(person.Name))
-            {
                 query = query.Where(g => g.Name == person.Name);
-            }
 
-            // Execute a consulta e retorne os resultados.
+            if (!string.IsNullOrEmpty(person.MotherName))
+                query = query.Where(g => g.MotherName == person.MotherName);
+
+            if (!string.IsNullOrEmpty(person.Rg))
+                query = query.Where(g => g.Rg == person.Rg);
+
+            if (!string.IsNullOrEmpty(person.Cpf))
+                query = query.Where(g => g.Cpf == person.Cpf);
+
+            // Executar a consulta e retorne os resultados.
             return query.ToList();
         }
 
