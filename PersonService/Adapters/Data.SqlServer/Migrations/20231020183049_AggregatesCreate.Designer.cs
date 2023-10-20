@@ -4,6 +4,7 @@ using Data.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.SqlServer.Migrations
 {
     [DbContext(typeof(GdlDbContext))]
-    partial class GdlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231020183049_AggregatesCreate")]
+    partial class AggregatesCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,7 @@ namespace Data.SqlServer.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PersonId")
+                    b.Property<int?>("PersonId")
                         .HasColumnType("int");
 
                     b.Property<int>("PersonTypeId")
@@ -124,19 +127,15 @@ namespace Data.SqlServer.Migrations
 
             modelBuilder.Entity("Domain.Entities.PersonAggregate", b =>
                 {
-                    b.HasOne("Domain.Entities.Person", "Person")
+                    b.HasOne("Domain.Entities.Person", null)
                         .WithMany("PersonAggregates")
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PersonId");
 
                     b.HasOne("Domain.Entities.PersonType", "PersonType")
                         .WithMany()
                         .HasForeignKey("PersonTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Person");
 
                     b.Navigation("PersonType");
                 });

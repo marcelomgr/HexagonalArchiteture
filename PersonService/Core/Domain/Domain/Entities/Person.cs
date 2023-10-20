@@ -16,10 +16,10 @@ namespace Domain.Entities
         public string? CondemnationProccess { get; set; }
         public string? CondemnationCourt { get; set; }
         public DateTime? CondemnationDate { get; set; }
+        public List<PersonAggregate> PersonAggregates { get; set; }
 
         private void ValidateState()
         {
-
             if (string.IsNullOrEmpty(Name))
             {
                 throw new MissingRequiredInformationException();

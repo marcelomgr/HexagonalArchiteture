@@ -2,6 +2,7 @@
 using Data.SqlServer.PersonType;
 using Entities = Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Data.SqlServer.PersonAggregate;
 
 namespace Data.SqlServer
 {
@@ -11,10 +12,13 @@ namespace Data.SqlServer
 
         public virtual DbSet<Entities.Person> Persons { get; set; }
         public virtual DbSet<Entities.PersonType> PersonTypes { get; set; }
+        public virtual DbSet<Entities.PersonAggregate> PersonAggregates { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonAggregateConfiguration());
         }
     }
 }

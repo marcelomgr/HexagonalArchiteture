@@ -34,9 +34,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetPersonById(int personId)
+        public async Task<ActionResult> GetPersonById(int id)
         {
-            var res = await _personManager.GetPersonById(personId);
+            var res = await _personManager.GetPersonById(id);
 
             if (res.Success) return Ok(res.Data);
 

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Application.Person.Dtos;
 using Application.PersonType.Dtos;
+using Application.PersonAggregate.Dtos;
 
 namespace MVC.Mapper
 {

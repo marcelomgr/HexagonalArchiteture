@@ -47,7 +47,7 @@ namespace Application.Person
         }
         public async Task<PersonResponse> GetPersonById(int id)
         {
-            var person = await _personRepository.GetById(id);
+            var person = await _personRepository.GetByIdWithIncludes(id);
 
             if (person == null)
             {

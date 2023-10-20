@@ -10,16 +10,100 @@ namespace Data.SqlServer.Person
         {
             _gdlDbContext = gdlDbContext;
         }
+
+        public async Task Update(Domain.Entities.Person person)
+        {
+            var existingPerson = await GetByIdWithIncludes(person.Id);
+
+            if (existingPerson != null)
+            {
+                existingPerson.Rg = person.Rg;
+                existingPerson.Cpf = person.Cpf;
+                existingPerson.Name = person.Name;
+                existingPerson.MotherName = person.MotherName;
+                existingPerson.CondemnationDate = person.CondemnationDate;
+                existingPerson.CondemnedRegister = person.CondemnedRegister;
+                existingPerson.CondemnationCourt = person.CondemnationCourt;
+                existingPerson.CondemnationArticle = person.CondemnationArticle;
+                existingPerson.CondemnationProccess = person.CondemnationProccess;
+
+                // Verifique se há um PersonAggregate correspondente na requisição
+                var updatedPersonAggregate = person.PersonAggregates.FirstOrDefault();
+
+                if (updatedPersonAggregate != null)
+                {
+                    // Procure um PersonAggregate existente com base em RequisitionId e SourceSystemId
+                    var existingAggregate = existingPerson.PersonAggregates
+                        .FirstOrDefault(a =>
+                            a.PersonId == person.Id &&
+                            a.RequisitionId == updatedPersonAggregate.RequisitionId &&
+                            a.SourceSystemId == updatedPersonAggregate.SourceSystemId);
+
+                    if (existingAggregate != null)
+                    {
+                        // Atualize o PersonAggregate existente com base na correspondência
+                        existingAggregate.UserId = updatedPersonAggregate.UserId;
+                        existingAggregate.PersonTypeId = updatedPersonAggregate.PersonTypeId;
+                        // Outras propriedades do PersonAggregate
+
+                        // Defina o estado da entidade como modificada
+                        _gdlDbContext.Entry(existingAggregate).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        // Não existe um PersonAggregate correspondente, adicione-o
+                        existingPerson.PersonAggregates.Add(updatedPersonAggregate);
+                    }
+                }
+
+                // Define o estado da entidade Person como modificada
+                _gdlDbContext.Entry(existingPerson).State = EntityState.Modified;
+
+                await _gdlDbContext.SaveChangesAsync();
+            }
+        }
+
         public async Task<int> Create(Domain.Entities.Person person)
         {
-            person.Created = DateTime.Now;
+            DateTime now = DateTime.Now;
+
+            person.Created = now;
+
+            if (person.PersonAggregates != null && person.PersonAggregates.Any())
+            {
+                foreach (var aggregate in person.PersonAggregates)
+                {
+                    if (aggregate.Id == 0)
+                    {
+                        aggregate.Created = now;
+
+                        _gdlDbContext.Entry(aggregate).Reference(a => a.PersonType).IsModified = false;
+                    }
+                }
+            }
+
             _gdlDbContext.Persons.Add(person);
 
             await _gdlDbContext.SaveChangesAsync();
             return person.Id;
         }
 
+        //public async Task<int> Create(Domain.Entities.Person person)
+        //{
+        //    person.Created = DateTime.Now;
+
+        //    _gdlDbContext.Persons.Add(person);
+
+        //    await _gdlDbContext.SaveChangesAsync();
+        //    return person.Id;
+        //}
+
         public Task<Domain.Entities.Person?> GetById(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
+        public Task<Domain.Entities.Person?> GetByIdWithIncludes(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id)
+            .Include(a => a.PersonAggregates)
+            .ThenInclude(t => t.PersonType)
+            .FirstOrDefaultAsync();
+
         public async Task<List<Domain.Entities.Person>> Get(Domain.Entities.Person person)
         {
             // Consulta incluindo todos os registros.
@@ -45,27 +129,29 @@ namespace Data.SqlServer.Person
             return query.ToList();
         }
 
-        public async Task Update(Domain.Entities.Person person)
-        {
-            var existingPerson = await GetById(person.Id);
+        //public async Task Update(Domain.Entities.Person person)
+        //{
+        //    var existingPerson = await GetById(person.Id);
 
-            if (existingPerson != null)
-            {
-                existingPerson.Rg = person.Rg;
-                existingPerson.Cpf = person.Cpf;
-                existingPerson.Name = person.Name;
-                existingPerson.MotherName = person.MotherName;
-                existingPerson.CondemnationDate = person.CondemnationDate;
-                existingPerson.CondemnedRegister = person.CondemnedRegister;
-                existingPerson.CondemnationCourt = person.CondemnationCourt;
-                existingPerson.CondemnationArticle = person.CondemnationArticle;
-                existingPerson.CondemnationProccess = person.CondemnationProccess;
+        //    if (existingPerson != null)
+        //    {
+        //        existingPerson.Rg = person.Rg;
+        //        existingPerson.Cpf = person.Cpf;
+        //        existingPerson.Name = person.Name;
+        //        existingPerson.MotherName = person.MotherName;
+        //        existingPerson.CondemnationDate = person.CondemnationDate;
+        //        existingPerson.CondemnedRegister = person.CondemnedRegister;
+        //        existingPerson.CondemnationCourt = person.CondemnationCourt;
+        //        existingPerson.CondemnationArticle = person.CondemnationArticle;
+        //        existingPerson.CondemnationProccess = person.CondemnationProccess;
 
-                // Define o estado da entidade como modificada
-                _gdlDbContext.Entry(existingPerson).State = EntityState.Modified;
+        //        // Define o estado da entidade como modificada
+        //        _gdlDbContext.Entry(existingPerson).State = EntityState.Modified;
 
-                await _gdlDbContext.SaveChangesAsync();
-            }
-        }
+        //        await _gdlDbContext.SaveChangesAsync();
+        //    }
+        //}
+
+        
     }
 }

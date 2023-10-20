@@ -1,4 +1,6 @@
-﻿using Entities = Domain.Entities;
+﻿using Application.PersonAggregate.Dtos;
+using Domain.Entities;
+using Entities = Domain.Entities;
 
 
 namespace Application.Person.Dtos
@@ -16,7 +18,7 @@ namespace Application.Person.Dtos
         public string? CondemnationProccess { get; set; }
         public string? CondemnationCourt { get; set; }
         public DateTime? CondemnationDate { get; set; }
-        public int IdPersonType { get; set; }
+        public List<PersonAggregateDto> PersonAggregates { get; set; }
         public static Entities.Person MapToEntity(PersonDto personDto)
         {
             return new Entities.Person
@@ -32,6 +34,7 @@ namespace Application.Person.Dtos
                 CondemnationProccess = personDto.CondemnationProccess,
                 CondemnationCourt = personDto.CondemnationCourt,
                 CondemnationDate = personDto.CondemnationDate,
+                PersonAggregates = personDto.PersonAggregates.Select(aggregates => PersonAggregateDto.MapToEntity(aggregates)).ToList()
             };
         }
 
@@ -50,6 +53,7 @@ namespace Application.Person.Dtos
                 CondemnationProccess = person.CondemnationProccess,
                 CondemnationCourt = person.CondemnationCourt,
                 CondemnationDate = person.CondemnationDate,
+                PersonAggregates = person.PersonAggregates.Select(aggregates => PersonAggregateDto.MapToDto(aggregates)).ToList()
             };
         }
     }
