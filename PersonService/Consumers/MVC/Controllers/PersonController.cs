@@ -1,10 +1,8 @@
-﻿using Application.Person.Dtos;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Application.Person.Ports;
 using Application.Person.Requests;
-using AutoMapper;
-using Domain.Entities;
-using Microsoft.AspNetCore.Mvc;
-using MVC.Dtos;
+using PersonDto = Application.Person.Dtos.PersonDto;
 
 namespace MVC.Controllers
 {
@@ -29,9 +27,9 @@ namespace MVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Get(Dtos.PersonDto personDto)
+        public async Task<IActionResult> GetPersons(Dtos.PersonDto personDto)
         {
-            var person = _mapper.Map<Dtos.PersonDto, Application.Person.Dtos.PersonDto>(personDto);
+            var person = _mapper.Map<Dtos.PersonDto, PersonDto>(personDto);
 
             var response = await _personManager.GetPersons(person);
 
@@ -44,7 +42,7 @@ namespace MVC.Controllers
             return BadRequest();
         }
 
-        public async Task<IActionResult> GetById(Dtos.PersonDto personDto)
+        public async Task<IActionResult> GetPersonById(Dtos.PersonDto personDto)
         {
             var response = await _personManager.GetPersonById(personDto.Id);
 
@@ -58,9 +56,9 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(Dtos.PersonDto personDto)
+        public async Task<IActionResult> SavePerson(Dtos.PersonDto personDto)
         {
-            var person = _mapper.Map<Dtos.PersonDto, Application.Person.Dtos.PersonDto>(personDto);
+            var person = _mapper.Map<Dtos.PersonDto, PersonDto>(personDto);
 
             var request = new CreatePersonRequest
             {

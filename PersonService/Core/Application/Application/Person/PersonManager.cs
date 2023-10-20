@@ -1,19 +1,69 @@
-﻿using Application.Person.Dtos;
+﻿using Domain.Person.Ports;
+using Application.Responses;
+using Application.Person.Dtos;
+using Domain.Person.Exceptions;
 using Application.Person.Ports;
 using Application.Person.Requests;
 using Application.Person.Responses;
-using Application.Responses;
-using Domain.Person.Exceptions;
-using Domain.Person.Ports;
 
-namespace Application
+namespace Application.Person
 {
     public class PersonManager : IPersonManager
     {
         private IPersonRepository _personRepository;
+        
         public PersonManager(IPersonRepository personRepository)
         {
             _personRepository = personRepository;
+        }
+
+        public async Task<PersonResponseList> GetPersons(PersonDto request)
+        {
+            var persons = await _personRepository.Get(PersonDto.MapToEntity(request));
+
+            if (persons == null || persons.Count() == 0)
+            {
+                return new PersonResponseList
+                {
+                    Success = false,
+                    ErrorCode = ErrorCodes.PERSON_NOT_FOUND,
+                    Message = "Não foram encontrados resultados para essa busca"
+                };
+            }
+
+            List<PersonDto> personsDto = new List<PersonDto>();
+
+            foreach (var item in persons)
+            {
+                PersonDto dto = PersonDto.MapToDto(item);
+                personsDto.Add(dto);
+            }
+
+            return new PersonResponseList
+            {
+                Data = personsDto,
+                Success = true,
+            };
+        }
+        public async Task<PersonResponse> GetPersonById(int id)
+        {
+            var person = await _personRepository.GetById(id);
+
+            if (person == null)
+            {
+                return new PersonResponse
+                {
+                    Success = false,
+                    ErrorCode = ErrorCodes.PERSON_NOT_FOUND,
+                    Message = "Não foi encontrada uma pessoa com esse Id"
+                };
+            }
+
+            return new PersonResponse
+            {
+                Data = PersonDto.MapToDto(person),
+                Success = true,
+            };
         }
         public async Task<PersonResponse> CreatePerson(CreatePersonRequest request)
         {
@@ -58,56 +108,6 @@ namespace Application
                     Message = "Ocorreu um erro ao salvar no DB"
                 };
             }
-        }
-
-        public async Task<PersonResponse> GetPersonById(int personId)
-        {
-            var person = await _personRepository.GetById(personId);
-
-            if (person == null)
-            {
-                return new PersonResponse
-                {
-                    Success = false,
-                    ErrorCode = ErrorCodes.NOT_FOUND,
-                    Message = "Não foi encontrada uma pessoa com esse Id"
-                };
-            }
-
-            return new PersonResponse
-            {
-                Data = PersonDto.MapToDto(person),
-                Success = true,
-            };
-        }
-
-        public async Task<PersonResponseList> GetPersons(PersonDto request)
-        {
-            var persons = await _personRepository.Get(PersonDto.MapToEntity(request));
-            
-            if (persons == null || persons.Count() == 0)
-            {
-                return new PersonResponseList
-                {
-                    Success = false,
-                    ErrorCode = ErrorCodes.NOT_FOUND,
-                    Message = "Não foram encontrados resultados para essa busca"
-                };
-            }
-
-            List<PersonDto> personsDto = new List<PersonDto>();
-
-            foreach (var item in persons)
-            {
-                PersonDto dto = PersonDto.MapToDto(item);
-                personsDto.Add(dto);
-            }
-
-            return new PersonResponseList
-            {
-                Data = personsDto,
-                Success = true,
-            };
         }
     }
 }

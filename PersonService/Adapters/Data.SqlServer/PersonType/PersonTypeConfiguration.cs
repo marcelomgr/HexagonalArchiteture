@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Data.SqlServer.Person
+namespace Data.SqlServer.PersonType
 {
-    public class PersonConfiguration : IEntityTypeConfiguration<Entities.Person>
+    public class PersonTypeConfiguration : IEntityTypeConfiguration<Entities.PersonType>
     {
-        public void Configure(EntityTypeBuilder<Entities.Person> builder)
+        public void Configure(EntityTypeBuilder<Entities.PersonType> builder)
         {
             builder.HasKey(x => x.Id);
         }

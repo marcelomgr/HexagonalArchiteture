@@ -3,12 +3,14 @@
     public enum ErrorCodes
     {
         // Persons related codes 1 to 500
-        NOT_FOUND = 1,
+        PERSON_NOT_FOUND = 1,
         COULD_NOT_STORE_DATA = 2,
         INVALID_PERSON_ID = 3,
         MISSING_REQUIRED_INFORMATION = 4,
         INVALID_CPF = 5,
-        PERSON_NOT_FOUND = 6,
+
+        // Person Types related codes 501 to 600
+        PERSON_TYPE_NOT_FOUND = 501
     }
 
     public abstract class Response

@@ -1,5 +1,4 @@
-﻿
-using Entities = Domain.Entities;
+﻿using Entities = Domain.Entities;
 
 
 namespace Application.Person.Dtos
@@ -33,7 +32,6 @@ namespace Application.Person.Dtos
                 CondemnationProccess = personDto.CondemnationProccess,
                 CondemnationCourt = personDto.CondemnationCourt,
                 CondemnationDate = personDto.CondemnationDate,
-                IdPersonType = personDto.IdPersonType,
             };
         }
 
@@ -52,7 +50,6 @@ namespace Application.Person.Dtos
                 CondemnationProccess = person.CondemnationProccess,
                 CondemnationCourt = person.CondemnationCourt,
                 CondemnationDate = person.CondemnationDate,
-                IdPersonType = person.IdPersonType,
             };
         }
     }

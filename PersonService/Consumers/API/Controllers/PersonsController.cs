@@ -1,8 +1,10 @@
+using Application;
+using Application.Responses;
 using Application.Person.Dtos;
-using Application.Person.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Application.Person.Ports;
-using Application;
+using Application.Person.Requests;
+using Application.Person.Responses;
 
 namespace API.Controllers
 {
@@ -21,8 +23,28 @@ namespace API.Controllers
             _personManager = personManager;
         }
 
+        [HttpGet]
+        public async Task<ActionResult> GetPersons(PersonDto person)
+        {
+            var res = await _personManager.GetPersons(person);
+
+            if(res.Success) return Ok(res.Data);
+
+            return BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetPersonById(int personId)
+        {
+            var res = await _personManager.GetPersonById(personId);
+
+            if (res.Success) return Ok(res.Data);
+
+            return NotFound(res);
+        }
+
         [HttpPost]
-        public async Task<ActionResult<PersonDto>> Post(PersonDto person)
+        public async Task<ActionResult<PersonResponse>> SavePerson(PersonDto person)
         {
             var request = new CreatePersonRequest
             {
@@ -33,7 +55,7 @@ namespace API.Controllers
 
             if (res.Success) return Created("", res.Data);
 
-            if (res.ErrorCode == ErrorCodes.NOT_FOUND)
+            if (res.ErrorCode == ErrorCodes.PERSON_NOT_FOUND)
             {
                 return NotFound(res);
             }
@@ -42,16 +64,6 @@ namespace API.Controllers
                 _logger.LogError("Response with unknown ErrorCode Returned", res);
                 return BadRequest(res);
             }
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<PersonDto>> Get(int personId)
-        {
-            var res = await _personManager.GetPersonById(personId);
-
-            if (res.Success) return Ok(res.Data);
-
-            return NotFound(res);
         }
     }
 }

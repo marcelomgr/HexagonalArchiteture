@@ -32,6 +32,7 @@
     function setLayoutSaveModal(action) {
         if (action == 'insert') {
             $('#SaveForm').trigger('reset');
+            $("#hdnId").val('0')
             $('#SaveTitleModal').text('Cadastrar Usuário')
             $('#btnSave').html('<i class="fas fa-check"></i> Cadastrar')
         }
@@ -65,7 +66,7 @@
 
         $.ajax({
             type: "GET",
-            url: "/Person/Get",
+            url: "/Person/GetPersons",
             data: formData,
             success: function (result) {
 
@@ -129,7 +130,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/Person/Save",
+            url: "/Person/SavePerson",
             data: formData,
             success: function (result) {
                 $("#personSaveModal").modal("hide");
@@ -178,7 +179,7 @@
 
         $.ajax({
             type: "GET",
-            url: "/Person/GetById",
+            url: "/Person/GetPersonById",
             data: formData,
             success: function (result) {
                 console.log(result)
@@ -213,7 +214,7 @@
 
         $.ajax({
             type: "GET",
-            url: "/Person/GetById",
+            url: "/Person/GetPersonById",
             data: formData,
             success: function (result) {
                 console.log(result)

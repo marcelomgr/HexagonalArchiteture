@@ -1,5 +1,4 @@
-﻿
-namespace Domain.Person.Exceptions
+﻿namespace Domain.Person.Exceptions
 {
     public class MissingRequiredInformationException : Exception
     {

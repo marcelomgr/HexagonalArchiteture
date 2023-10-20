@@ -1,5 +1,5 @@
-﻿using Domain.Person.Exceptions;
-using Domain.Person.Ports;
+﻿using Domain.Person.Ports;
+using Domain.Person.Exceptions;
 
 namespace Domain.Entities
 {
@@ -16,7 +16,6 @@ namespace Domain.Entities
         public string? CondemnationProccess { get; set; }
         public string? CondemnationCourt { get; set; }
         public DateTime? CondemnationDate { get; set; }
-        public int IdPersonType { get; set; }
 
         private void ValidateState()
         {

@@ -1,4 +1,5 @@
-﻿namespace Domain.PersonType.Exceptions
+﻿
+namespace Domain.Person.Exceptions
 {
     public class PersonTypeNotFoundException : Exception
     {

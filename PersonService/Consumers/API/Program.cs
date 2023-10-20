@@ -1,8 +1,13 @@
 using Application;
-using Application.Person.Ports;
 using Data.SqlServer;
-using Data.SqlServer.Person;
+using Application.Person;
 using Domain.Person.Ports;
+using Data.SqlServer.Person;
+using Application.PersonType;
+using Domain.PersonType.Ports;
+using Application.Person.Ports;
+using Data.SqlServer.PersonType;
+using Application.PersonType.Ports;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -16,6 +21,9 @@ builder.Services.AddControllers();
 # region IoC
 builder.Services.AddScoped<IPersonManager, PersonManager>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+builder.Services.AddScoped<IPersonTypeManager, PersonTypeManager>();
+builder.Services.AddScoped<IPersonTypeRepository, PersonTypeRepository>();
 # endregion
 
 # region DB wiring up
