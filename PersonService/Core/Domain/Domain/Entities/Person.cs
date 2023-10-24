@@ -11,16 +11,11 @@ namespace Domain.Entities
         public string? MotherName { get; set; }
         public string? Rg { get; set; }
         public string Cpf { get; set; }
-        public string? CondemnedRegister { get; set; }
-        public string? CondemnationArticle { get; set; }
-        public string? CondemnationProccess { get; set; }
-        public string? CondemnationCourt { get; set; }
-        public DateTime? CondemnationDate { get; set; }
         public List<PersonAggregate> PersonAggregates { get; set; }
 
         private void ValidateState()
         {
-            if (string.IsNullOrEmpty(Name))
+            if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Cpf))
             {
                 throw new MissingRequiredInformationException();
             }

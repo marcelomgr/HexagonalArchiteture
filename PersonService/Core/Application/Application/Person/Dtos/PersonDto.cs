@@ -13,11 +13,6 @@ namespace Application.Person.Dtos
         public string? MotherName { get; set; }
         public string? Rg { get; set; }
         public string Cpf { get; set; }
-        public string? CondemnedRegister { get; set; }
-        public string? CondemnationArticle { get; set; }
-        public string? CondemnationProccess { get; set; }
-        public string? CondemnationCourt { get; set; }
-        public DateTime? CondemnationDate { get; set; }
         public List<PersonAggregateDto> PersonAggregates { get; set; }
         public static Entities.Person MapToEntity(PersonDto personDto)
         {
@@ -29,15 +24,9 @@ namespace Application.Person.Dtos
                 MotherName = personDto.MotherName,
                 Rg = personDto.Rg,
                 Cpf = personDto.Cpf,
-                CondemnedRegister = personDto.CondemnedRegister,
-                CondemnationArticle = personDto.CondemnationArticle,
-                CondemnationProccess = personDto.CondemnationProccess,
-                CondemnationCourt = personDto.CondemnationCourt,
-                CondemnationDate = personDto.CondemnationDate,
                 PersonAggregates = personDto.PersonAggregates.Select(aggregates => PersonAggregateDto.MapToEntity(aggregates)).ToList()
             };
         }
-
         public static PersonDto MapToDto(Entities.Person person)
         {
             return new PersonDto
@@ -48,11 +37,6 @@ namespace Application.Person.Dtos
                 MotherName = person.MotherName,
                 Rg = person.Rg,
                 Cpf = person.Cpf,
-                CondemnedRegister = person.CondemnedRegister,
-                CondemnationArticle = person.CondemnationArticle,
-                CondemnationProccess = person.CondemnationProccess,
-                CondemnationCourt = person.CondemnationCourt,
-                CondemnationDate = person.CondemnationDate,
                 PersonAggregates = person.PersonAggregates.Select(aggregates => PersonAggregateDto.MapToDto(aggregates)).ToList()
             };
         }

@@ -1,5 +1,4 @@
-﻿using Application.Person.Dtos;
-using Application.PersonType.Dtos;
+﻿using Application.PersonType.Dtos;
 using Domain.Entities;
 using Entities = Domain.Entities;
 
@@ -12,6 +11,13 @@ namespace Application.PersonAggregate.Dtos
         public int? RequisitionId { get; set; }
         public int ConsumerId { get; set; }
         public int SourceSystemId { get; set; }
+
+        public string? CondemnedRegister { get; set; }
+        public string? CondemnationArticle { get; set; }
+        public string? CondemnationProccess { get; set; }
+        public string? CondemnationCourt { get; set; }
+        public DateTime? CondemnationDate { get; set; }
+
         public int PersonTypeId { get; set; }
         public PersonTypeDto? PersonType { get; set; }
 
@@ -30,6 +36,11 @@ namespace Application.PersonAggregate.Dtos
                 ConsumerId = personAggregatesDto.ConsumerId,
                 SourceSystemId = personAggregatesDto.SourceSystemId,
                 PersonTypeId = personAggregatesDto.PersonTypeId,
+                CondemnedRegister = personAggregatesDto.CondemnedRegister,
+                CondemnationArticle = personAggregatesDto.CondemnationArticle,
+                CondemnationProccess = personAggregatesDto.CondemnationProccess,
+                CondemnationCourt = personAggregatesDto.CondemnationCourt,
+                CondemnationDate = personAggregatesDto.CondemnationDate
             };
         }
 
@@ -48,10 +59,16 @@ namespace Application.PersonAggregate.Dtos
                 ConsumerId = personAggregates.ConsumerId,
                 SourceSystemId = personAggregates.SourceSystemId,
                 PersonTypeId = personAggregates.PersonTypeId,
-                PersonType = new PersonTypeDto() { 
-                    Id = personAggregates.PersonType.Id, 
-                    Description = personAggregates.PersonType.Description 
-                }
+                CondemnedRegister = personAggregates.CondemnedRegister,
+                CondemnationArticle = personAggregates.CondemnationArticle,
+                CondemnationProccess = personAggregates.CondemnationProccess,
+                CondemnationCourt = personAggregates.CondemnationCourt,
+                CondemnationDate = personAggregates.CondemnationDate,
+                PersonType = new PersonTypeDto()
+                {
+                    Id = personAggregates.PersonType.Id,
+                    Description = personAggregates.PersonType.Description
+                },
             };
         }
     }

@@ -1,8 +1,8 @@
 ﻿using Data.SqlServer.Person;
 using Data.SqlServer.PersonType;
-using Entities = Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Data.SqlServer.PersonAggregate;
+using Microsoft.EntityFrameworkCore;
+using Entities = Domain.Entities;
 
 namespace Data.SqlServer
 {
