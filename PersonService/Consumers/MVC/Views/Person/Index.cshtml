@@ -202,7 +202,7 @@
     <!-- Modal de Visualização -->
     <div class="modal fade" id="personDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 130% !important; margin: 0 auto;">
                 <div class="modal-header">
                     <h5 class="modal-title">Detalhes da Pessoa</h5>
                     <button type="button" class="closeDetails" data-dismiss="modal" aria-label="Fechar">
@@ -210,40 +210,65 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <th scope="row">Nome</th>
-                                <td id="nameView"></td>
-                                <th scope="row">Artigo de Condenação</th>
-                                <td id="ArticleView"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">RG</th>
-                                <td id="rgView"></td>
-                                <th scope="row">Tribunal de Condenação</th>
-                                <td id="CourtView"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">CPF</th>
-                                <td id="cpfView" class="cpf"></td>
-                                <th scope="row">Data de Condenação</th>
-                                <td id="DateView"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Nome da Mãe</th>
-                                <td id="motherNameView"></td>
-                                <th scope="row">Processo de Condenação</th>
-                                <td id="ProccessView"></td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Data de Criação</th>
-                                <td id="createdView"></td>
-                                <th scope="row">Registro do Condenado</th>
-                                <td id="RegisterView"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="NameView">Nome:</label>
+                            <span id="NameView" class="formatted-text"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="BirthDateView">Nascimento:</label>
+                            <span id="BirthDateView" class="formatted-text"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="GenderView">Sexo:</label>
+                            <span id="GenderView" class="formatted-text"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="MotherNameView">Nome da Mãe:</label>
+                            <span id="MotherNameView" class="formatted-text"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="FatherNameView">Nome do Pai:</label>
+                            <span id="FatherNameView" class="formatted-text"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="SocialNameView">Nome Social:</label>
+                            <span id="SocialNameView" class="formatted-text"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="RgView">RG:</label>
+                            <span id="RgView" class="formatted-text"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="CpfView">CPF:</label>
+                            <span id="CpfView" class="formatted-text"></span>
+                        </div>
+                    </div>
+
+                    <hr style="display: none;" id="logSectionSeparator">
+                    <div id="logSection" style="display: none;">
+                        <table id="logTable" class="display">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Campo</th>
+                                    <th>De</th>
+                                    <th>Para</th>
+                                    <th>Sistema</th>
+                                    <th>Usuário</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
                 </div>
             </div>
         </div>

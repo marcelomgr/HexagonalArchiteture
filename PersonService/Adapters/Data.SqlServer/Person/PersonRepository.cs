@@ -1,4 +1,6 @@
-﻿using Domain.Person.Ports;
+﻿using Domain;
+using Domain.Entities;
+using Domain.Person.Ports;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
@@ -19,6 +21,8 @@ namespace Data.SqlServer.Person
 
             if (existingPerson != null)
             {
+                var originalPerson = ClonePerson(existingPerson);
+
                 existingPerson.Rg = person.Rg;
                 existingPerson.Cpf = person.Cpf;
                 existingPerson.Name = person.Name;
@@ -45,7 +49,7 @@ namespace Data.SqlServer.Person
                         // Atualiza o PersonAggregate existente com base na correspondência
                         existingAggregate.UserId = updatedPersonAggregate.UserId;
                         existingAggregate.PersonTypeId = updatedPersonAggregate.PersonTypeId;
-                        
+
                         // Define o estado da entidade como modificada
                         _gdlDbContext.Entry(existingAggregate).State = EntityState.Modified;
                     }
@@ -58,6 +62,9 @@ namespace Data.SqlServer.Person
 
                 // Define o estado da entidade Person como modificada
                 _gdlDbContext.Entry(existingPerson).State = EntityState.Modified;
+
+                // Registra as alterações no log
+                LogChanges(originalPerson, existingPerson);
 
                 await _gdlDbContext.SaveChangesAsync();
             }
@@ -122,5 +129,78 @@ namespace Data.SqlServer.Person
             return query.ToList();
         }
 
+        private void LogChanges(Domain.Entities.Person originalPerson, Domain.Entities.Person updatedPerson)
+        {
+            var entityType = "Person";
+            var entityId = updatedPerson.Id;
+            var aggregate = updatedPerson.PersonAggregates[0];
+            DateTime changeDate = DateTime.Now;
+
+            foreach (var propertyInfo in typeof(Domain.Entities.Person).GetProperties())
+            {
+                if (propertyInfo.Name != "Id" && propertyInfo.Name != "Created")
+                {
+                    var originalValue = propertyInfo.GetValue(originalPerson);
+                    var updatedValue = propertyInfo.GetValue(updatedPerson);
+
+                    if (!object.Equals(originalValue, updatedValue))
+                    {
+                        var changeLog = new Domain.Entities.ChangeLog
+                        {
+                            Created = changeDate,
+                            EntityName = entityType,
+                            EntityId = entityId,
+                            PropertyName = GetDescription(propertyInfo),
+                            OldValue = originalValue != null ? originalValue.ToString() : string.Empty,
+                            NewValue = updatedValue != null ? updatedValue.ToString() : string.Empty,
+                            UserId = aggregate.UserId,
+                            ConsumerId = aggregate.ConsumerId,
+                            SourceSystemId = aggregate.SourceSystemId,
+                            SourceSystemName = SourceSystems.GetName(typeof(SourceSystems), aggregate.SourceSystemId)
+                        };
+
+                        _gdlDbContext.ChangeLogs.Add(changeLog);
+                    }
+                }
+            }
+        }
+
+        private Domain.Entities.Person ClonePerson(Domain.Entities.Person person)
+        {
+            var originalPerson = new Domain.Entities.Person
+            {
+                Rg = person.Rg,
+                Cpf = person.Cpf,
+                Name = person.Name,
+                MotherName = person.MotherName,
+                SocialName = person.SocialName,
+                FatherName = person.FatherName,
+                BirthDate = person.BirthDate,
+                Gender = person.Gender,
+                PersonAggregates = person.PersonAggregates,
+            };
+
+            return originalPerson;
+        }
+
+        private string GetDescription(PropertyInfo propertyInfo)
+        {
+            var customAttributes = propertyInfo.GetCustomAttributesData();
+            var descriptionAttribute = customAttributes.FirstOrDefault();
+
+            if (descriptionAttribute != null)
+            {
+                if (descriptionAttribute.ConstructorArguments.Count > 0)
+                {
+                    var descriptionValue = descriptionAttribute.ConstructorArguments[0].Value;
+                    if (descriptionValue != null && descriptionValue is string description)
+                    {
+                        return description;
+                    }
+                }
+            }
+
+            return propertyInfo.Name;
+        }
     }
 }

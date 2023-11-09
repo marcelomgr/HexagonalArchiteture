@@ -4,6 +4,7 @@ using Data.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.SqlServer.Migrations
 {
     [DbContext(typeof(GdlDbContext))]
-    partial class GdlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231109193725_ChangeLogs")]
+    partial class ChangeLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,11 +33,11 @@ namespace Data.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("ChangeDateTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("ConsumerId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("EntityId")
                         .HasColumnType("int");
@@ -57,10 +60,6 @@ namespace Data.SqlServer.Migrations
 
                     b.Property<int>("SourceSystemId")
                         .HasColumnType("int");
-
-                    b.Property<string>("SourceSystemName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");

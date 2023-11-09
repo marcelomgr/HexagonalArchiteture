@@ -4,6 +4,7 @@ using Data.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.SqlServer.Migrations
 {
     [DbContext(typeof(GdlDbContext))]
-    partial class GdlDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231109225053_CreatedColumnInChangeLogs")]
+    partial class CreatedColumnInChangeLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,6 +54,9 @@ namespace Data.SqlServer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PersonId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PropertyName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -66,6 +72,8 @@ namespace Data.SqlServer.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PersonId");
 
                     b.ToTable("ChangeLogs");
                 });
@@ -166,6 +174,13 @@ namespace Data.SqlServer.Migrations
                     b.ToTable("PersonTypes");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ChangeLog", b =>
+                {
+                    b.HasOne("Domain.Entities.Person", null)
+                        .WithMany("ChangeLogs")
+                        .HasForeignKey("PersonId");
+                });
+
             modelBuilder.Entity("Domain.Entities.PersonAggregate", b =>
                 {
                     b.HasOne("Domain.Entities.Person", "Person")
@@ -187,6 +202,8 @@ namespace Data.SqlServer.Migrations
 
             modelBuilder.Entity("Domain.Entities.Person", b =>
                 {
+                    b.Navigation("ChangeLogs");
+
                     b.Navigation("PersonAggregates");
                 });
 #pragma warning restore 612, 618

@@ -1,4 +1,5 @@
-﻿using Application.PersonAggregate.Dtos;
+﻿using Application.ChangeLog.Dtos;
+using Application.PersonAggregate.Dtos;
 using Domain.Entities;
 using Entities = Domain.Entities;
 
@@ -18,6 +19,7 @@ namespace Application.Person.Dtos
         public DateTime? BirthDate { get; set; }
         public string? Gender { get; set; }
         public List<PersonAggregateDto> PersonAggregates { get; set; }
+        public List<ChangeLogDto> ChangeLogs { get; set; }
         public static Entities.Person MapToEntity(PersonDto personDto)
         {
             return new Entities.Person

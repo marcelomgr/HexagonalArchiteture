@@ -13,6 +13,7 @@ namespace Data.SqlServer
         public virtual DbSet<Entities.Person> Persons { get; set; }
         public virtual DbSet<Entities.PersonType> PersonTypes { get; set; }
         public virtual DbSet<Entities.PersonAggregate> PersonAggregates { get; set; }
+        public virtual DbSet<Entities.ChangeLog> ChangeLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -8,6 +8,12 @@
         },
     });
 
+    var logTable = new DataTable('#logTable', {
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json',
+        },
+    });
+
     $('[data-toggle="tooltip"]').tooltip();
 
     //$('.cpf').inputmask("999.999.999-99");
@@ -196,18 +202,36 @@
             success: function (result) {
                 console.log(result)
 
-                $('#rgView').text(result.rg);
-                $('#cpfView').text(result.cpf);
-                $('#nameView').text(result.name);
-                $('#motherNameView').text(result.motherName);
-                $('#createdView').text(formatarData(result.created));
-                $('#DateView').text(result.condemnationDate);
-                $('#CourtView').text(result.condemnationCourt);
-                $('#RegisterView').text(result.condemnedRegister);
-                $('#ArticleView').text(result.condemnationArticle);
-                $('#ProccessView').text(result.condemnationProccess);
+                $('#NameView').text(result.name);
+                $('#BirthDateView').text(result.birthdate);
+                $('#GenderView').text(result.gender);
+
+                $('#MotherNameView').text(result.motherName);
+                $('#FatherNameView').text(result.fatherName);
+                $('#SocialNameView').text(result.socialName);
+
+                $('#RgView').text(result.rg);
+                $('#CpfView').text(result.cpf);
 
                 $("#personDetailsModal").modal("show");
+
+                const logData = result.changeLogs;
+
+                if (logData.length > 0) {
+                    document.getElementById('logSectionSeparator').style.display = 'block';
+                    document.getElementById('logSection').style.display = 'block';
+
+                    logData.forEach(function (log) {
+                        logTable.row.add([
+                            formatarData(log.created),
+                            log.propertyName,
+                            log.oldValue,
+                            log.newValue,
+                            log.sourceSystemName,
+                            log.userId
+                        ]).draw();
+                    });
+                }
             },
             error: function (error) {
                 console.log(error);

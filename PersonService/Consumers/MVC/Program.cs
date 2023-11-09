@@ -1,13 +1,12 @@
-using MVC;
-using Application;
-using AutoMapper;
 using MVC.Mapper;
 using Data.SqlServer;
 using Application.Person;
 using Domain.Person.Ports;
 using Data.SqlServer.Person;
 using Application.PersonType;
+using Domain.ChangeLog.Ports;
 using Domain.PersonType.Ports;
+using Data.SqlServer.ChangeLog;
 using Application.Person.Ports;
 using Data.SqlServer.PersonType;
 using Application.PersonType.Ports;
@@ -25,6 +24,7 @@ builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddScoped<IPersonManager, PersonManager>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonTypeManager, PersonTypeManager>();
+builder.Services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
 builder.Services.AddScoped<IPersonTypeRepository, PersonTypeRepository>();
 # endregion
 

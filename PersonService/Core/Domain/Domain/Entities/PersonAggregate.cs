@@ -14,12 +14,6 @@ namespace Domain.Entities
         public int? RequisitionId { get; set; }
         public int ConsumerId { get; set; }
         public int SourceSystemId { get; set; }
-
-        //public string? CondemnedRegister { get; set; }
-        //public string? CondemnationArticle { get; set; }
-        //public string? CondemnationProccess { get; set; }
-        //public string? CondemnationCourt { get; set; }
-        //public DateTime? CondemnationDate { get; set; }
             
         public int PersonId { get; set; }
         public Person Person { get; set; }
@@ -35,7 +29,7 @@ namespace Domain.Entities
 
     public enum SourceSystems
     {
-        sistema1 = 12342342,
-        sistema2 = 22342342,
+        sistema1 = 1,
+        sistema2 = 2,
     }
 }

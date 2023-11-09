@@ -6,16 +6,20 @@ using Application.Person.Ports;
 using Application.Person.Requests;
 using Application.Person.Responses;
 using Application.PersonAggregate.Dtos;
+using Domain.ChangeLog.Ports;
+using Application.ChangeLog.Dtos;
 
 namespace Application.Person
 {
     public class PersonManager : IPersonManager
     {
         private IPersonRepository _personRepository;
+        private IChangeLogRepository _changeLogRepository;
         
-        public PersonManager(IPersonRepository personRepository)
+        public PersonManager(IPersonRepository personRepository, IChangeLogRepository changeLogRepository)
         {
             _personRepository = personRepository;
+            _changeLogRepository = changeLogRepository;
         }
 
         public async Task<PersonResponseList> GetPersons(PersonDto request)
@@ -62,9 +66,14 @@ namespace Application.Person
                 };
             }
 
+            var personDto = PersonDto.MapToDto(person);
+            var changeLogs = await _changeLogRepository.GetChangeLogsByPersonId(personDto.Id);
+            personDto.ChangeLogs = changeLogs.Select(ChangeLogDto.MapToDto).OrderByDescending(l => l.Id).ToList();
+
             return new PersonResponse
             {
-                Data = PersonDto.MapToDto(person),
+                Data = personDto,
+                //Data = PersonDto.MapToDto(person),
                 Success = true,
             };
         }
