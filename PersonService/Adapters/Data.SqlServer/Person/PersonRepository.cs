@@ -1,6 +1,7 @@
 ﻿using Domain.Person.Ports;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
 
 namespace Data.SqlServer.Person
 {
@@ -22,13 +23,17 @@ namespace Data.SqlServer.Person
                 existingPerson.Cpf = person.Cpf;
                 existingPerson.Name = person.Name;
                 existingPerson.MotherName = person.MotherName;
+                existingPerson.SocialName = person.SocialName;
+                existingPerson.FatherName = person.FatherName;
+                existingPerson.BirthDate = person.BirthDate;
+                existingPerson.Gender = person.Gender;
 
-                // Verifique se há um PersonAggregate correspondente na requisição
+                // Verifica se há um PersonAggregate correspondente na requisição
                 var updatedPersonAggregate = person.PersonAggregates.FirstOrDefault();
 
                 if (updatedPersonAggregate != null)
                 {
-                    // Procure um PersonAggregate existente com base em RequisitionId e SourceSystemId
+                    // Procura um PersonAggregate existente com base em RequisitionId e SourceSystemId
                     var existingAggregate = existingPerson.PersonAggregates
                         .FirstOrDefault(a =>
                             a.PersonId == person.Id &&
@@ -37,21 +42,16 @@ namespace Data.SqlServer.Person
 
                     if (existingAggregate != null)
                     {
-                        // Atualize o PersonAggregate existente com base na correspondência
+                        // Atualiza o PersonAggregate existente com base na correspondência
                         existingAggregate.UserId = updatedPersonAggregate.UserId;
                         existingAggregate.PersonTypeId = updatedPersonAggregate.PersonTypeId;
-                        existingAggregate.CondemnationDate = updatedPersonAggregate.CondemnationDate;
-                        existingAggregate.CondemnedRegister = updatedPersonAggregate.CondemnedRegister;
-                        existingAggregate.CondemnationCourt = updatedPersonAggregate.CondemnationCourt;
-                        existingAggregate.CondemnationArticle = updatedPersonAggregate.CondemnationArticle;
-                        existingAggregate.CondemnationProccess = updatedPersonAggregate.CondemnationProccess;
-
-                        // Defina o estado da entidade como modificada
+                        
+                        // Define o estado da entidade como modificada
                         _gdlDbContext.Entry(existingAggregate).State = EntityState.Modified;
                     }
                     else
                     {
-                        // Não existe um PersonAggregate correspondente, adicione-o
+                        // Se não existe um PersonAggregate correspondente, é adicionado
                         existingPerson.PersonAggregates.Add(updatedPersonAggregate);
                     }
                 }
@@ -97,7 +97,10 @@ namespace Data.SqlServer.Person
         public async Task<List<Domain.Entities.Person>> Get(Domain.Entities.Person person)
         {
             // Consulta incluindo todos os registros.
-            var query = _gdlDbContext.Persons.AsQueryable();
+            var query = _gdlDbContext.Persons
+                .Include(a => a.PersonAggregates)
+                .ThenInclude(t => t.PersonType)
+                .AsQueryable();
 
             // Critérios de pesquisa apenas se os campos não forem nulos ou vazios.
             if (person.Id != 0)
@@ -112,7 +115,7 @@ namespace Data.SqlServer.Person
             if (!string.IsNullOrEmpty(person.Rg))
                 query = query.Where(g => g.Rg == person.Rg);
 
-            if (!string.IsNullOrEmpty(person.Cpf))
+            if (person.Cpf != 0)
                 query = query.Where(g => g.Cpf == person.Cpf);
 
             // Executar a consulta e retorne os resultados.

@@ -44,18 +44,34 @@
             <form id="searchForm">
                 <div class="row mb-3">
                     <div class="col-md-4">
-                        <label>ID:</label>
-                        <input type="text" id="Id" name="Id" class="form-control">
-                    </div>
-                    <div class="col-md-4">
                         <label>Nome:</label>
                         <input type="text" id="Name" name="Name" class="form-control">
                     </div>
                     <div class="col-md-4">
+                        <label>Nascimento:</label>
+                        <input type="text" id="BirthDate" name="BirthDate" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Sexo:</label>
+                        <input type="text" id="Gender" name="Gender" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
                         <label>Nome da Mãe:</label>
                         <input type="text" id="MotherName" name="MotherName" class="form-control">
                     </div>
+                    <div class="col-md-4">
+                        <label>Nome do Pai:</label>
+                        <input type="text" id="FatherName" name="FatherName" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Nome Social:</label>
+                        <input type="text" id="SocialName" name="SocialName" class="form-control">
+                    </div>
                 </div>
+
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label>RG:</label>
@@ -66,6 +82,7 @@
                         <input type="text" id="Cpf" name="Cpf" class="form-control cpf">
                     </div>
                 </div>
+                
                 <hr>
 
                 <!-- Botões de Ação -->
@@ -122,15 +139,34 @@
                 <div class="modal-body">
                     <form id="SaveForm">
                         <div class="row mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <input type="hidden" id="hdnId" name="hdnId" value="0">
 
                                 <label>Nome:</label>
                                 <input type="text" id="NameSave" name="NameSave" class="form-control">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label>Nascimento:</label>
+                                <input type="text" id="BirthDateSave" name="BirthDateSave" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Sexo:</label>
+                                <input type="text" id="GenderSave" name="GenderSave" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
                                 <label>Nome da Mãe:</label>
                                 <input type="text" id="MotherNameSave" name="MotherNameSave" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Nome do Pai:</label>
+                                <input type="text" id="FatherNameSave" name="FatherNameSave" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label>Nome Social:</label>
+                                <input type="text" id="SocialNameSave" name="SocialNameSave" class="form-control">
                             </div>
                         </div>
 
@@ -145,27 +181,6 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label>Artigo Condenação:</label>
-                                <input type="text" id="ArticleSave" name="ArticleSave" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Processo Condenação:</label>
-                                <input type="text" id="ProccessSave" name="ProccessSave" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label>Vara Criminal Condenação:</label>
-                                <input type="text" id="CourtSave" name="CourtSave" class="form-control">
-                            </div>
-                            <div class="col-md-6">
-                                <label>Matrícula Condenado:</label>
-                                <input type="text" id="RegisterSave" name="RegisterSave" class="form-control">
-                            </div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="display: block;">

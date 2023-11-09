@@ -12,6 +12,16 @@
 
     //$('.cpf').inputmask("999.999.999-99");
 
+    var aggregate =  [
+        {
+            "created": "2023-11-09T18:21:51.358Z",
+            "userId": 1,
+            "requisitionId": 1,
+            "consumerId": 1,
+            "sourceSystemId": 1,
+            "personTypeId": 1
+    }
+    ]
     //#endregion
 
     // #region Modal
@@ -57,11 +67,16 @@
 
         // Coleta dos dados do formulário
         var formData = {
-            Id: $("#Id").val(),
-            Rg: $("#Rg").val(),
-            Cpf: $("#Cpf").val(),
             Name: $("#Name").val(),
-            MotherName: $("#MotherName").val()
+            BirthDate: $("#BirthDate").val(),
+            Gender: $("#Gender").val(),
+
+            MotherName: $("#MotherName").val(),
+            FatherName: $("#FatherName").val(),
+            SocialName: $("#SocialName").val(),
+
+            Rg: $("#Rg").val(),
+            Cpf: $("#Cpf").val()
         };
 
         $.ajax({
@@ -69,7 +84,7 @@
             url: "/Person/GetPersons",
             data: formData,
             success: function (result) {
-
+                console.log(result)
                 for (var i = 0; i < result.length; i++) {
                     dataTable.row.add([
                         result[i].id,
@@ -85,14 +100,12 @@
 
                 $('.view-button').click(function () {
                     var id = $(this).data('id');
-                    console.log('.viewbutton')
                     viewPerson(id);
                 });
 
                 // Evento de clique para editar
                 $('.edit-button').click(function () {
                     var id = $(this).data('id');
-                    console.log('.editbutton')
                     editPerson(id);
                 });
             },
@@ -115,18 +128,19 @@
 
         var formData = {
             Id: $("#hdnId").val(),
+
+            Name: $("#NameSave").val(),
+            BirthDate: $("#BirthDateSave").val(),
+            Gender: $("#GenderSave").val(),
+
+            MotherName: $("#MotherNameSave").val(),
+            FatherName: $("#FatherNameSave").val(),
+            SocialName: $("#SocialNameSave").val(),
+
             Rg: $("#RgSave").val(),
             Cpf: $("#CpfSave").val(),
-            Name: $("#NameSave").val(),
-            MotherName: $("#MotherNameSave").val(),
-            CondemnationCourt: $('#CourtSave').val(),
-            CondemnedRegister: $('#RegisterSave').val(),
-            CondemnationArticle: $('#ArticleSave').val(),
-            CondemnationProccess: $('#ProccessSave').val()
+            PersonAggregates: aggregate
         };
-
-        console.log(formData)
-        console.log('btnsave')
 
         $.ajax({
             type: "POST",
@@ -151,11 +165,9 @@
                 }
             },
             error: function (error) {
-                console.log(error);
-                console.log(error.responseJSON);
-                console.log('editperson');
 
                 let msg;
+
                 if (error.responseJSON.errorCode == 5) {
                     msg = 'Digite um Cpf válido.'
                 }
@@ -220,14 +232,16 @@
                 console.log(result)
 
                 $('#hdnId').val(result.id);
+                $('#NameSave').val(result.name);
+                $('#BirthDateSave').val(result.birthdate);
+                $('#GenderSave').val(result.gender);
+
+                $('#MotherNameSave').val(result.motherName);
+                $('#FatherNameSave').val(result.fatherName);
+                $('#SocialNameSave').val(result.socialName);
+
                 $('#RgSave').val(result.rg);
                 $('#CpfSave').val(result.cpf);
-                $('#NameSave').val(result.name);
-                $('#MotherNameSave').val(result.motherName);
-                $('#RegisterSave').val(result.condemnedRegister);
-                $('#CourtSave').val(result.condemnationCourt);
-                $('#ArticleSave').val(result.condemnationArticle);
-                $('#ProccessSave').val(result.condemnationProccess);
 
                 setLayoutSaveModal('update')
 

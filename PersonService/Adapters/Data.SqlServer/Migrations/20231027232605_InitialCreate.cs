@@ -6,11 +6,45 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Data.SqlServer.Migrations
 {
     /// <inheritdoc />
-    public partial class AggregatesCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Persons",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SocialName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MotherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FatherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Rg = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cpf = table.Column<long>(type: "bigint", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Gender = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Persons", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PersonTypes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonTypes", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "PersonAggregates",
                 columns: table => new
@@ -22,8 +56,8 @@ namespace Data.SqlServer.Migrations
                     RequisitionId = table.Column<int>(type: "int", nullable: true),
                     ConsumerId = table.Column<int>(type: "int", nullable: false),
                     SourceSystemId = table.Column<int>(type: "int", nullable: false),
-                    PersonTypeId = table.Column<int>(type: "int", nullable: false),
-                    PersonId = table.Column<int>(type: "int", nullable: true)
+                    PersonId = table.Column<int>(type: "int", nullable: false),
+                    PersonTypeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,7 +72,8 @@ namespace Data.SqlServer.Migrations
                         name: "FK_PersonAggregates_Persons_PersonId",
                         column: x => x.PersonId,
                         principalTable: "Persons",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -57,6 +92,12 @@ namespace Data.SqlServer.Migrations
         {
             migrationBuilder.DropTable(
                 name: "PersonAggregates");
+
+            migrationBuilder.DropTable(
+                name: "PersonTypes");
+
+            migrationBuilder.DropTable(
+                name: "Persons");
         }
     }
 }

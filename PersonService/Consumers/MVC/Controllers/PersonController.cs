@@ -27,11 +27,9 @@ namespace MVC.Controllers
             return View();
         }
 
-        public async Task<IActionResult> GetPersons(Dtos.PersonDto personDto)
+        public async Task<IActionResult> GetPersons(PersonDto personDto)
         {
-            var person = _mapper.Map<Dtos.PersonDto, PersonDto>(personDto);
-
-            var response = await _personManager.GetPersons(person);
+            var response = await _personManager.GetPersons(personDto);
 
             if (response.Success)
             {
@@ -56,13 +54,11 @@ namespace MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SavePerson(Dtos.PersonDto personDto)
+        public async Task<IActionResult> SavePerson(PersonDto personDto)
         {
-            var person = _mapper.Map<Dtos.PersonDto, PersonDto>(personDto);
-
             var request = new CreatePersonRequest
             {
-                Data = person
+                Data = personDto
             };
 
             var response = await _personManager.CreatePerson(request);

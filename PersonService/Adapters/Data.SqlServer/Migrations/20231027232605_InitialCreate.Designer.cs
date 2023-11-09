@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.SqlServer.Migrations
 {
     [DbContext(typeof(GdlDbContext))]
-    [Migration("20231020205616_PersonTypeIdAndPersonIdinPersonAggregate")]
-    partial class PersonTypeIdAndPersonIdinPersonAggregate
+    [Migration("20231027232605_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,27 +33,20 @@ namespace Data.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CondemnationArticle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CondemnationCourt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CondemnationDate")
+                    b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CondemnationProccess")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CondemnedRegister")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<long>("Cpf")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("FatherName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MotherName")
                         .HasColumnType("nvarchar(max)");
@@ -63,6 +56,9 @@ namespace Data.SqlServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rg")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SocialName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

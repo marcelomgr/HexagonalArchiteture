@@ -2,21 +2,18 @@
 {
     public static class Utils
     {
-        public static bool ValidateCpf(string cpf)
+        public static bool ValidateCpf(long cpf)
         {
-            // Remover caracteres não numéricos e verificar o comprimento
+            string cpfString = cpf.ToString("D11"); // Converte o long em uma string de 11 dígitos
+
+            // Verificar o comprimento
+            if (cpfString.Length != 11)
+                return false;
+
             int[] multiplicador1 = new int[9] { 10, 9, 8, 7, 6, 5, 4, 3, 2 };
             int[] multiplicador2 = new int[10] { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2 };
 
-            cpf = cpf.Trim().Replace(".", "").Replace("-", "");
-            if (cpf.Length != 11)
-                return false;
-
-            for (int j = 0; j < 10; j++)
-                if (j.ToString().PadLeft(11, char.Parse(j.ToString())) == cpf)
-                    return false;
-
-            string tempCpf = cpf.Substring(0, 9);
+            string tempCpf = cpfString.Substring(0, 9);
             int soma = 0;
 
             for (int i = 0; i < 9; i++)
@@ -42,7 +39,7 @@
 
             digito = digito + resto.ToString();
 
-            return cpf.EndsWith(digito);
+            return cpfString.EndsWith(digito);
         }
     }
 }

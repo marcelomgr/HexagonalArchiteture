@@ -5,6 +5,7 @@ using Domain.Person.Exceptions;
 using Application.Person.Ports;
 using Application.Person.Requests;
 using Application.Person.Responses;
+using Application.PersonAggregate.Dtos;
 
 namespace Application.Person
 {
@@ -19,6 +20,8 @@ namespace Application.Person
 
         public async Task<PersonResponseList> GetPersons(PersonDto request)
         {
+            request.PersonAggregates = new List<PersonAggregateDto>();
+
             var persons = await _personRepository.Get(PersonDto.MapToEntity(request));
 
             if (persons == null || persons.Count() == 0)

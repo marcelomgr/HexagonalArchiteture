@@ -30,12 +30,20 @@ namespace Data.SqlServer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Cpf")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long>("Cpf")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("FatherName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MotherName")
                         .HasColumnType("nvarchar(max)");
@@ -45,6 +53,9 @@ namespace Data.SqlServer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Rg")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SocialName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -66,9 +77,6 @@ namespace Data.SqlServer.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PersonCondemnationId")
-                        .HasColumnType("int");
-
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
@@ -86,49 +94,11 @@ namespace Data.SqlServer.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonCondemnationId")
-                        .IsUnique()
-                        .HasFilter("[PersonCondemnationId] IS NOT NULL");
-
                     b.HasIndex("PersonId");
 
                     b.HasIndex("PersonTypeId");
 
                     b.ToTable("PersonAggregates");
-                });
-
-            modelBuilder.Entity("Domain.Entities.PersonCondemnation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CondemnationArticle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CondemnationCourt")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CondemnationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CondemnationProccess")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CondemnedRegister")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PersonAggregateId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PersonCondemnation");
                 });
 
             modelBuilder.Entity("Domain.Entities.PersonType", b =>
@@ -150,10 +120,6 @@ namespace Data.SqlServer.Migrations
 
             modelBuilder.Entity("Domain.Entities.PersonAggregate", b =>
                 {
-                    b.HasOne("Domain.Entities.PersonCondemnation", "PersonCondemnation")
-                        .WithOne()
-                        .HasForeignKey("Domain.Entities.PersonAggregate", "PersonCondemnationId");
-
                     b.HasOne("Domain.Entities.Person", "Person")
                         .WithMany("PersonAggregates")
                         .HasForeignKey("PersonId")
@@ -167,8 +133,6 @@ namespace Data.SqlServer.Migrations
                         .IsRequired();
 
                     b.Navigation("Person");
-
-                    b.Navigation("PersonCondemnation");
 
                     b.Navigation("PersonType");
                 });
