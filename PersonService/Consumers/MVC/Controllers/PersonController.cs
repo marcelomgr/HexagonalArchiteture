@@ -9,16 +9,13 @@ namespace MVC.Controllers
     public class PersonController : Controller
     {
         private readonly ILogger<PersonController> _logger;
-        private readonly IMapper _mapper;
         private readonly IPersonManager _personManager;
 
         public PersonController(
             ILogger<PersonController> logger,
-            IMapper mapper,
             IPersonManager personManager)
         {
             _logger = logger;
-            _mapper = mapper;
             _personManager = personManager;
         }
 

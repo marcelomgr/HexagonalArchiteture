@@ -1,5 +1,6 @@
 ﻿using Domain.Person.Ports;
 using Domain.Person.Exceptions;
+using System.Reflection;
 
 namespace Domain.Entities
 {
@@ -27,14 +28,16 @@ namespace Domain.Entities
         public DateTime? BirthDate { get; set; }
 
 
-        [PortugueseDescription("Sexo")]
-        public string? Gender { get; set; }
+        //[PortugueseDescription("Gênero")]
+        //public string? GenderDescription { get; set; }
+        public int PersonGenderId { get; set; }
+        public PersonGender PersonGender { get; set; }
 
         public List<PersonAggregate> PersonAggregates { get; set; }
 
         private void ValidateState()
         {
-            if (string.IsNullOrEmpty(Name) || Cpf == 0)
+            if (string.IsNullOrEmpty(Name) || Cpf == 0 || PersonGenderId == 0)
             {
                 throw new MissingRequiredInformationException();
             }

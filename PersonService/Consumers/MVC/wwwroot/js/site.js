@@ -14,7 +14,7 @@ function loadSpineer(state) {
     }
 }
 
-function formatarData(data) {
+function formatDateTime(data) {
     var date = new Date(data);
     var dia = String(date.getDate()).padStart(2, '0');
     var mes = String(date.getMonth() + 1).padStart(2, '0');
@@ -24,4 +24,27 @@ function formatarData(data) {
     var segundos = String(date.getSeconds()).padStart(2, '0');
 
     return dia + '/' + mes + '/' + ano + ' ' + hora + ':' + minutos + ':' + segundos;
+}
+
+function formatDate(data) {
+    var date = new Date(data);
+    var dia = String(date.getDate()).padStart(2, '0');
+    var mes = String(date.getMonth() + 1).padStart(2, '0');
+    var ano = date.getFullYear();
+
+    return dia + '/' + mes + '/' + ano;
+}
+
+function replaceMask(value) {
+    return value.replace(/[-.]/g, '');
+}
+
+function formatCpf(cpf) {
+    cpf = String(cpf);
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}
+
+function formatRg(rg) {
+    rg = String(rg);
+    return rg.replace(/(\d{2})(\d{3})(\d{3})(\d{1})/, '$1.$2.$3-$4');
 }

@@ -2,23 +2,40 @@
 
     // #region Inicialização
 
+    loadPersonTypes()
+    loadPersonGenders()
+
     var dataTable = new DataTable('#dataTable', {
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json',
+            url: '/lib/datatables/json/pt-BR.json',
         },
     });
 
     var logTable = new DataTable('#logTable', {
         language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json',
+            url: '/lib/datatables/json/pt-BR.json',
         },
     });
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    //$('.cpf').inputmask("999.999.999-99");
+    $('.cpf').mask('000.000.000-00', { reverse: true }); 
+    $('.rg').mask('00.000.000-0', { reverse: true });
 
-    var aggregate =  [
+    $('.datepicker').datepicker({
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        dayNamesMin: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S', 'D'],
+        dayNamesShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+        monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+        monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        nextText: 'Proximo',
+        prevText: 'Anterior'
+    });
+    
+    $(".datepicker").mask("99/99/9999");
+
+    var aggregate = [
         {
             "created": "2023-11-09T18:21:51.358Z",
             "userId": 1,
@@ -26,7 +43,7 @@
             "consumerId": 1,
             "sourceSystemId": 1,
             "personTypeId": 1
-    }
+        }
     ]
     //#endregion
 
@@ -75,14 +92,14 @@
         var formData = {
             Name: $("#Name").val(),
             BirthDate: $("#BirthDate").val(),
-            Gender: $("#Gender").val(),
+            PersonGenderId: $("#Gender").val(),
 
             MotherName: $("#MotherName").val(),
             FatherName: $("#FatherName").val(),
             SocialName: $("#SocialName").val(),
 
-            Rg: $("#Rg").val(),
-            Cpf: $("#Cpf").val()
+            Rg: replaceMask($("#Rg").val()),
+            Cpf: replaceMask($("#Cpf").val()),
         };
 
         $.ajax({
@@ -92,13 +109,14 @@
             success: function (result) {
                 console.log(result)
                 for (var i = 0; i < result.length; i++) {
+
                     dataTable.row.add([
                         result[i].id,
                         result[i].name,
                         result[i].motherName,
-                        result[i].cpf,
-                        result[i].rg,
-                        formatarData(result[i].created),
+                        formatCpf(result[i].cpf),
+                        formatRg(result[i].rg),
+                        formatDateTime(result[i].created),
                         '<button class="btn btn-primary view-button" data-id="' + result[i].id + '"><i class="fas fa-eye"></i></button>&nbsp;&nbsp;' +
                         '<button class="btn btn-warning edit-button" data-id="' + result[i].id + '"><i class="fas fa-edit"></i></button>'
                     ]).draw();
@@ -132,19 +150,21 @@
 
         const isRegister = $("#hdnId").val() == 0
 
+        console.log('$("#BirthDateSave").val()')
+
         var formData = {
             Id: $("#hdnId").val(),
 
             Name: $("#NameSave").val(),
             BirthDate: $("#BirthDateSave").val(),
-            Gender: $("#GenderSave").val(),
+            PersonGenderId: $("#GenderSave").val(),
 
             MotherName: $("#MotherNameSave").val(),
             FatherName: $("#FatherNameSave").val(),
             SocialName: $("#SocialNameSave").val(),
 
-            Rg: $("#RgSave").val(),
-            Cpf: $("#CpfSave").val(),
+            Rg: replaceMask($("#RgSave").val()),
+            Cpf: replaceMask($("#CpfSave").val()),
             PersonAggregates: aggregate
         };
 
@@ -201,17 +221,18 @@
             data: formData,
             success: function (result) {
                 console.log(result)
+                console.log(result.birthDate)
 
                 $('#NameView').text(result.name);
-                $('#BirthDateView').text(result.birthdate);
-                $('#GenderView').text(result.gender);
+                $('#BirthDateView').text(formatDate(result.birthDate));
+                $('#GenderView').val(result.personGenderId);
 
                 $('#MotherNameView').text(result.motherName);
                 $('#FatherNameView').text(result.fatherName);
                 $('#SocialNameView').text(result.socialName);
 
-                $('#RgView').text(result.rg);
-                $('#CpfView').text(result.cpf);
+                $('#RgView').text(formatRg(result.rg));
+                $('#CpfView').text(formatCpf(result.cpf));
 
                 $("#personDetailsModal").modal("show");
 
@@ -223,7 +244,7 @@
 
                     logData.forEach(function (log) {
                         logTable.row.add([
-                            formatarData(log.created),
+                            formatDateTime(log.created),
                             log.propertyName,
                             log.oldValue,
                             log.newValue,
@@ -256,16 +277,18 @@
                 console.log(result)
 
                 $('#hdnId').val(result.id);
-                $('#NameSave').val(result.name);
-                $('#BirthDateSave').val(result.birthdate);
-                $('#GenderSave').val(result.gender);
+                $('#PersonTypeSave').val(result.personAggregates[0].personTypeId);
 
+                $('#NameSave').val(result.name);
+                $('#BirthDateSave').val(formatDate(result.birthDate));
+                $('#GenderSave').val(result.personGenderId);
+                
                 $('#MotherNameSave').val(result.motherName);
                 $('#FatherNameSave').val(result.fatherName);
                 $('#SocialNameSave').val(result.socialName);
 
-                $('#RgSave').val(result.rg);
-                $('#CpfSave').val(result.cpf);
+                $('#RgSave').val(formatRg(result.rg));
+                $('#CpfSave').val(formatCpf(result.cpf));
 
                 setLayoutSaveModal('update')
 
@@ -276,5 +299,67 @@
             }
         });
     }
+
+    function loadPersonTypes() {
+
+        $.ajax({
+            url: "/PersonType/GetPersonTypes",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#PersonTypeSave').empty();
+
+                console.log(data)
+                console.log('data')
+
+                $('#PersonTypeSave').append($('<option>', {
+                    value: '',
+                    text: 'Selecione...'
+                }));
+
+                $.each(data, function (index, item) {
+                    $('#PersonTypeSave').append($('<option>', {
+                        value: item.id,
+                        text: item.description
+                    }));
+                });
+            },
+            error: function (error) {
+                console.log('Erro ao carregar os dados:', error);
+            }
+        });
+    }
+
+    function loadPersonGenders() {
+
+        $.ajax({
+            url: "/PersonGender/GetPersonGenders",
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#GenderSave').empty();
+
+                console.log(data)
+                console.log('data')
+
+                $('#GenderSave').append($('<option>', {
+                    value: '',
+                    text: 'Selecione...'
+                }));
+
+                $.each(data, function (index, item) {
+                    $('#GenderSave').append($('<option>', {
+                        value: item.id,
+                        text: item.description
+                    }));
+                });
+            },
+            error: function (error) {
+                console.log('Erro ao carregar os dados:', error);
+            }
+        });
+    }
+
     //#endregion
+
 });

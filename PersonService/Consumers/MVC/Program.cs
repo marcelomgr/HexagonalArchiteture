@@ -11,6 +11,10 @@ using Application.Person.Ports;
 using Data.SqlServer.PersonType;
 using Application.PersonType.Ports;
 using Microsoft.EntityFrameworkCore;
+using Application.PersonGender.Ports;
+using Application.PersonGender;
+using Data.SqlServer.PersonGender;
+using Domain.PersonGender.Ports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,14 +22,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 # region IoC
-//builder.Services.AddScoped<IPersonManager, PersonManager>();
-//builder.Services.AddScoped<IPersonRepository, PersonRepository>();
-builder.Services.AddAutoMapper(typeof(MapProfile));
 builder.Services.AddScoped<IPersonManager, PersonManager>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonTypeManager, PersonTypeManager>();
-builder.Services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
 builder.Services.AddScoped<IPersonTypeRepository, PersonTypeRepository>();
+builder.Services.AddScoped<IPersonGenderManager, PersonGenderManager>();
+builder.Services.AddScoped<IPersonGenderRepository, PersonGenderRepository>();
+builder.Services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
 # endregion
 
 # region DB wiring up

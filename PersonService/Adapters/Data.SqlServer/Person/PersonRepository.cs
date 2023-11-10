@@ -30,7 +30,7 @@ namespace Data.SqlServer.Person
                 existingPerson.SocialName = person.SocialName;
                 existingPerson.FatherName = person.FatherName;
                 existingPerson.BirthDate = person.BirthDate;
-                existingPerson.Gender = person.Gender;
+                existingPerson.PersonGenderId = person.PersonGenderId;
 
                 // Verifica se há um PersonAggregate correspondente na requisição
                 var updatedPersonAggregate = person.PersonAggregates.FirstOrDefault();
@@ -75,6 +75,8 @@ namespace Data.SqlServer.Person
             DateTime now = DateTime.Now;
 
             person.Created = now;
+
+            _gdlDbContext.Entry(person).Reference(a => a.PersonGender).IsModified = false;
 
             if (person.PersonAggregates != null && person.PersonAggregates.Any())
             {
@@ -176,7 +178,7 @@ namespace Data.SqlServer.Person
                 SocialName = person.SocialName,
                 FatherName = person.FatherName,
                 BirthDate = person.BirthDate,
-                Gender = person.Gender,
+                PersonGenderId = person.PersonGenderId,
                 PersonAggregates = person.PersonAggregates,
             };
 

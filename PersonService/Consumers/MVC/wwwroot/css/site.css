@@ -102,3 +102,8 @@ label {
     color: #333;
     font-size: 16px;
 }
+
+
+.datepicker {
+    padding: 6px !important;
+}

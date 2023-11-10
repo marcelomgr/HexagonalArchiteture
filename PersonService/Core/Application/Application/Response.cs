@@ -10,7 +10,10 @@
         INVALID_CPF = 5,
 
         // Person Types related codes 501 to 600
-        PERSON_TYPE_NOT_FOUND = 501
+        PERSON_TYPE_NOT_FOUND = 501,
+
+        // Person Gender related codes 601 to 700
+        PERSON_GENDER_NOT_FOUND = 601
     }
 
     public abstract class Response

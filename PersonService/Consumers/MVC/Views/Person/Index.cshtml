@@ -1,24 +1,21 @@
 ﻿@page
 @model MVC.Controllers.PersonController
 
-<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/all.min.css" asp-append-version="true">
 <link rel="stylesheet" type="text/css" href="~/lib/datatables/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="~/lib/jquery-ui/css/jquery-ui.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="~/lib/jquery-ui/css/jquery-ui.min.css" />
+<link href="~/lib/sweet-alert/css/sweetalert2.min.css" rel="stylesheet" />
+<link href="~/lib/bootstrap/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+<script src="~/lib/jquery-input-mask/js/jquery.mask.min.js"></script>
 <script src="~/lib/jquery-ui/js/jquery-ui.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
-
+<script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+<script src="~/lib/sweet-alert/js/sweetalert2.all.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap-datepicker.js"></script>
 <script src="~/js/person.js" asp-append-version="true"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-
 
 <div class="container">
 
@@ -34,7 +31,6 @@
         </div>
     </div>
 
-
     <!-- Seção Filtros -->
     <div class="card mt-4">
         <div class="card-header">
@@ -49,10 +45,10 @@
                     </div>
                     <div class="col-md-4">
                         <label>Nascimento:</label>
-                        <input type="text" id="BirthDate" name="BirthDate" class="form-control">
+                        <input type="text" id="BirthDate" name="BirthDate" class="form-control datepicker">
                     </div>
                     <div class="col-md-4">
-                        <label>Sexo:</label>
+                        <label>Gênero:</label>
                         <input type="text" id="Gender" name="Gender" class="form-control">
                     </div>
                 </div>
@@ -75,7 +71,7 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label>RG:</label>
-                        <input type="text" id="Rg" name="Rg" class="form-control">
+                        <input type="text" id="Rg" name="Rg" class="form-control rg">
                     </div>
                     <div class="col-md-4">
                         <label>CPF:</label>
@@ -128,7 +124,7 @@
 
     <!-- Modal de Salvamento -->
     <div class="modal fade" id="personSaveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog" role="document" style="max-width: 630px !important;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="SaveTitleModal">Cadastrar Usuário</h5>
@@ -140,6 +136,10 @@
                     <form id="SaveForm">
                         <div class="row mb-3">
                             <div class="col-md-4">
+                                <label for="PersonTypeSave">Tipo de Pessoa:</label>
+                                <select id="PersonTypeSave" name="PersonTypeSave" class="form-control"></select>
+                            </div>
+                            <div class="col-md-4">
                                 <input type="hidden" id="hdnId" name="hdnId" value="0">
 
                                 <label>Nome:</label>
@@ -147,40 +147,43 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Nascimento:</label>
-                                <input type="text" id="BirthDateSave" name="BirthDateSave" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <label>Sexo:</label>
-                                <input type="text" id="GenderSave" name="GenderSave" class="form-control">
+                                <input type="text" id="BirthDateSave" name="BirthDateSave" class="form-control datepicker">
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label>Nome da Mãe:</label>
-                                <input type="text" id="MotherNameSave" name="MotherNameSave" class="form-control">
+                                <label>Gênero:</label>
+                            @* <input type="text" id="GenderSave" name="GenderSave" class="form-control"> *@
+                                <select id="GenderSave" name="GenderSave" class="form-control"></select>
                             </div>
                             <div class="col-md-4">
-                                <label>Nome do Pai:</label>
-                                <input type="text" id="FatherNameSave" name="FatherNameSave" class="form-control">
-                            </div>
-                            <div class="col-md-4">
-                                <label>Nome Social:</label>
-                                <input type="text" id="SocialNameSave" name="SocialNameSave" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
                                 <label>RG:</label>
-                                <input type="text" id="RgSave" name="RgSave" class="form-control">
+                                <input type="text" id="RgSave" name="RgSave" class="form-control rg">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>CPF:</label>
                                 <input type="text" id="CpfSave" name="CpfSave" class="form-control cpf">
                             </div>
                         </div>
 
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Nome da Mãe:</label>
+                                <input type="text" id="MotherNameSave" name="MotherNameSave" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label>Nome do Pai:</label>
+                                <input type="text" id="FatherNameSave" name="FatherNameSave" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label>Nome Social:</label>
+                                <input type="text" id="SocialNameSave" name="SocialNameSave" class="form-control">
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer" style="display: block;">
@@ -221,7 +224,7 @@
                             <span id="BirthDateView" class="formatted-text"></span>
                         </div>
                         <div class="col-md-4">
-                            <label for="GenderView">Sexo:</label>
+                            <label for="GenderView">Gênero:</label>
                             <span id="GenderView" class="formatted-text"></span>
                         </div>
                     </div>
@@ -244,11 +247,11 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="RgView">RG:</label>
-                            <span id="RgView" class="formatted-text"></span>
+                            <span id="RgView" class="formatted-text rg"></span>
                         </div>
                         <div class="col-md-6">
                             <label for="CpfView">CPF:</label>
-                            <span id="CpfView" class="formatted-text"></span>
+                            <span id="CpfView" class="formatted-text cpf"></span>
                         </div>
                     </div>
 

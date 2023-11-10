@@ -8,10 +8,14 @@ using Application.PersonType;
 using Domain.PersonType.Ports;
 using Data.SqlServer.ChangeLog;
 using Application.Person.Ports;
+using Application.PersonGender;
 using Data.SqlServer.PersonType;
+using Domain.PersonGender.Ports;
+using Data.SqlServer.PersonGender;
 using Application.PersonType.Ports;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Application.PersonGender.Ports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +29,9 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 builder.Services.AddScoped<IPersonTypeManager, PersonTypeManager>();
 builder.Services.AddScoped<IPersonTypeRepository, PersonTypeRepository>();
+
+builder.Services.AddScoped<IPersonGenderManager, PersonGenderManager>();
+builder.Services.AddScoped<IPersonGenderRepository, PersonGenderRepository>();
 
 builder.Services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
 # endregion

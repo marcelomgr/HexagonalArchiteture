@@ -36,11 +36,6 @@ namespace Application.PersonAggregate.Dtos
                 ConsumerId = personAggregatesDto.ConsumerId,
                 SourceSystemId = personAggregatesDto.SourceSystemId,
                 PersonTypeId = personAggregatesDto.PersonTypeId,
-                //CondemnedRegister = personAggregatesDto.CondemnedRegister,
-                //CondemnationArticle = personAggregatesDto.CondemnationArticle,
-                //CondemnationProccess = personAggregatesDto.CondemnationProccess,
-                //CondemnationCourt = personAggregatesDto.CondemnationCourt,
-                //CondemnationDate = personAggregatesDto.CondemnationDate
             };
         }
 
@@ -59,11 +54,6 @@ namespace Application.PersonAggregate.Dtos
                 ConsumerId = personAggregates.ConsumerId,
                 SourceSystemId = personAggregates.SourceSystemId,
                 PersonTypeId = personAggregates.PersonTypeId,
-                //CondemnedRegister = personAggregates.CondemnedRegister,
-                //CondemnationArticle = personAggregates.CondemnationArticle,
-                //CondemnationProccess = personAggregates.CondemnationProccess,
-                //CondemnationCourt = personAggregates.CondemnationCourt,
-                //CondemnationDate = personAggregates.CondemnationDate,
                 //PersonType = new PersonTypeDto()
                 //{
                 //    Id = personAggregates.PersonType.Id,

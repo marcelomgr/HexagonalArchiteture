@@ -1,7 +1,7 @@
 ﻿using Application.ChangeLog.Dtos;
-using Application.PersonAggregate.Dtos;
-using Domain.Entities;
 using Entities = Domain.Entities;
+using Application.PersonGender.Dtos;
+using Application.PersonAggregate.Dtos;
 
 
 namespace Application.Person.Dtos
@@ -17,7 +17,8 @@ namespace Application.Person.Dtos
         public string? Rg { get; set; }
         public long Cpf { get; set; }
         public DateTime? BirthDate { get; set; }
-        public string? Gender { get; set; }
+        public int PersonGenderId { get; set; }
+        public PersonGenderDto PersonGender { get; set; }
         public List<PersonAggregateDto> PersonAggregates { get; set; }
         public List<ChangeLogDto> ChangeLogs { get; set; }
         public static Entities.Person MapToEntity(PersonDto personDto)
@@ -33,7 +34,9 @@ namespace Application.Person.Dtos
                 SocialName = personDto.SocialName,
                 FatherName = personDto.FatherName,
                 BirthDate = personDto.BirthDate,
-                Gender = personDto.Gender,
+                //Gender = personDto.Gender,
+                PersonGenderId = personDto.PersonGenderId,
+                //PersonGender = PersonGenderDto.MapToEntity(personDto.PersonGender),
                 PersonAggregates = personDto.PersonAggregates.Select(aggregates => PersonAggregateDto.MapToEntity(aggregates)).ToList()
             };
         }
@@ -50,7 +53,9 @@ namespace Application.Person.Dtos
                 SocialName = person.SocialName,
                 FatherName = person.FatherName,
                 BirthDate = person.BirthDate,
-                Gender = person.Gender,
+                //Gender = person.Gender,
+                PersonGenderId = person.PersonGenderId,
+                //PersonGender = PersonGenderDto.MapToDto(person.PersonGender),
                 PersonAggregates = person.PersonAggregates.Select(aggregates => PersonAggregateDto.MapToDto(aggregates)).ToList()
             };
         }
