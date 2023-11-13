@@ -14,6 +14,18 @@ function loadSpineer(state) {
     }
 }
 
+function showSpinner() {
+    $(".overlay").fadeIn();
+    var target = document.getElementById("spinner");
+    var spinner = new Spinner().spin(target);
+}
+
+// Função para desativar o spinner
+function hideSpinner() {
+    $(".overlay").fadeOut();
+}
+
+
 function formatDateTime(data) {
     var date = new Date(data);
     var dia = String(date.getDate()).padStart(2, '0');

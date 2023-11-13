@@ -17,9 +17,16 @@
         },
     });
 
+    var aggregationsTable = new DataTable('#aggregationsTable', {
+        language: {
+            url: '/lib/datatables/json/pt-BR.json',
+        },
+    });
+
+
     $('[data-toggle="tooltip"]').tooltip();
 
-    $('.cpf').mask('000.000.000-00', { reverse: true }); 
+    $('.cpf').mask('000.000.000-00', { reverse: true });
     $('.rg').mask('00.000.000-0', { reverse: true });
 
     $('.datepicker').datepicker({
@@ -32,17 +39,15 @@
         nextText: 'Proximo',
         prevText: 'Anterior'
     });
-    
+
     $(".datepicker").mask("99/99/9999");
 
     var aggregate = [
         {
-            "created": "2023-11-09T18:21:51.358Z",
             "userId": 1,
             "requisitionId": 1,
             "consumerId": 1,
-            "sourceSystemId": 1,
-            "personTypeId": 1
+            "sourceSystemId": 1
         }
     ]
     //#endregion
@@ -60,6 +65,10 @@
 
     $(".closeDetails").on("click", function () {
         $("#personDetailsModal").modal("hide");
+    });
+
+    $(".closeLogs").on("click", function () {
+        $("#personLogsModal").modal("hide");
     });
 
     function setLayoutSaveModal(action) {
@@ -82,8 +91,7 @@
     $("#searchForm").on("submit", function (event) {
         event.preventDefault();
 
-        //spin on
-        loadSpineer('on');
+        showSpinner();
 
         //limpeza datatable
         dataTable.clear().draw();
@@ -110,6 +118,16 @@
                 console.log(result)
                 for (var i = 0; i < result.length; i++) {
 
+                    var viewButton = '<button class="btn btn-primary view-button" data-id="' + result[i].id + '" style="padding: revert;"><i class="fas fa-eye"></i></button>&nbsp;&nbsp;';
+                    var editButton = '<button class="btn btn-warning edit-button" data-id="' + result[i].id + '" style="padding: revert;"><i class="fas fa-edit"></i></button>';
+
+                    console.log(result[i].changeLogs)
+                    if (result[i].changeLogs && result[i].changeLogs.length > 0) {
+                        var logButton = '&nbsp;&nbsp;<button class="btn btn-success log-button" data-id="' + result[i].id + '" style="padding: revert; width: 31px;"><i class="fas fa-file-alt"></i></button>';
+                    } else {
+                        var logButton = '';
+                    }
+
                     dataTable.row.add([
                         result[i].id,
                         result[i].name,
@@ -117,8 +135,7 @@
                         formatCpf(result[i].cpf),
                         formatRg(result[i].rg),
                         formatDateTime(result[i].created),
-                        '<button class="btn btn-primary view-button" data-id="' + result[i].id + '"><i class="fas fa-eye"></i></button>&nbsp;&nbsp;' +
-                        '<button class="btn btn-warning edit-button" data-id="' + result[i].id + '"><i class="fas fa-edit"></i></button>'
+                        viewButton + editButton + logButton
                     ]).draw();
                 }
 
@@ -127,10 +144,14 @@
                     viewPerson(id);
                 });
 
-                // Evento de clique para editar
                 $('.edit-button').click(function () {
                     var id = $(this).data('id');
                     editPerson(id);
+                });
+
+                $('.log-button').click(function () {
+                    var id = $(this).data('id');
+                    viewChangeLogs(id);
                 });
             },
             error: function (error) {
@@ -140,7 +161,7 @@
 
         // spin off
         setTimeout(function () {
-            loadSpineer('off');
+            hideSpinner();
         }, 0);
     });
 
@@ -150,7 +171,7 @@
 
         const isRegister = $("#hdnId").val() == 0
 
-        console.log('$("#BirthDateSave").val()')
+        aggregate[0].personTypeId = $("#PersonTypeSave").val()
 
         var formData = {
             Id: $("#hdnId").val(),
@@ -167,6 +188,8 @@
             Cpf: replaceMask($("#CpfSave").val()),
             PersonAggregates: aggregate
         };
+
+        showSpinner();
 
         $.ajax({
             type: "POST",
@@ -207,13 +230,16 @@
                     text: msg,
                 });
             }
-
         });
+
+        hideSpinner();
     });
 
     function viewPerson(id) {
 
         var formData = { Id: id };
+
+        showSpinner();
 
         $.ajax({
             type: "GET",
@@ -221,11 +247,11 @@
             data: formData,
             success: function (result) {
                 console.log(result)
-                console.log(result.birthDate)
+                console.log('gender')
 
                 $('#NameView').text(result.name);
                 $('#BirthDateView').text(formatDate(result.birthDate));
-                $('#GenderView').val(result.personGenderId);
+                $('#GenderView').text(result.personGender.description);
 
                 $('#MotherNameView').text(result.motherName);
                 $('#FatherNameView').text(result.fatherName);
@@ -236,11 +262,53 @@
 
                 $("#personDetailsModal").modal("show");
 
+                const fullPersonAggregates = result.personAggregates;
+
+                //if (logData.length > 0) {
+
+                fullPersonAggregates.forEach(function (pagreg) {
+                    aggregationsTable.row.add([
+                        formatDateTime(pagreg.created),
+                        pagreg.personType.description,
+                        pagreg.sourceSystemDescription,
+                        pagreg.requisitionId,
+                        pagreg.userId
+                    ]).draw();
+                });
+                //}
+            },
+            error: function (error) {
+                console.log(error);
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro!',
+                    text: 'Erro ao cadastrar pessoa.',
+                });
+            }
+        });
+
+        hideSpinner();
+    };
+
+
+    function viewChangeLogs(id) {
+
+        var formData = { Id: id };
+
+        showSpinner();
+
+        $.ajax({
+            type: "GET",
+            url: "/Person/GetPersonById",
+            data: formData,
+            success: function (result) {
+
                 const logData = result.changeLogs;
 
                 if (logData.length > 0) {
-                    document.getElementById('logSectionSeparator').style.display = 'block';
-                    document.getElementById('logSection').style.display = 'block';
+                    //document.getElementById('logSectionSeparator').style.display = 'block';
+                    //document.getElementById('logSection').style.display = 'block';
 
                     logData.forEach(function (log) {
                         logTable.row.add([
@@ -253,6 +321,8 @@
                         ]).draw();
                     });
                 }
+
+                $("#personLogsModal").modal("show");
             },
             error: function (error) {
                 console.log(error);
@@ -264,10 +334,14 @@
                 });
             }
         });
+
+        hideSpinner();
     };
 
     function editPerson(id) {
         var formData = { Id: id };
+
+        showSpinner();
 
         $.ajax({
             type: "GET",
@@ -282,7 +356,7 @@
                 $('#NameSave').val(result.name);
                 $('#BirthDateSave').val(formatDate(result.birthDate));
                 $('#GenderSave').val(result.personGenderId);
-                
+
                 $('#MotherNameSave').val(result.motherName);
                 $('#FatherNameSave').val(result.fatherName);
                 $('#SocialNameSave').val(result.socialName);
@@ -298,6 +372,8 @@
                 console.log(error);
             }
         });
+
+        hideSpinner();
     }
 
     function loadPersonTypes() {

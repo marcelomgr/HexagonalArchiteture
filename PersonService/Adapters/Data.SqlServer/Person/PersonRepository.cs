@@ -99,6 +99,7 @@ namespace Data.SqlServer.Person
 
         public Task<Domain.Entities.Person?> GetById(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id).FirstOrDefaultAsync();
         public Task<Domain.Entities.Person?> GetByIdWithIncludes(int Id) => _gdlDbContext.Persons.Where(g => g.Id == Id)
+            .Include(g => g.PersonGender)
             .Include(a => a.PersonAggregates)
             .ThenInclude(t => t.PersonType)
             .FirstOrDefaultAsync();
@@ -174,10 +175,10 @@ namespace Data.SqlServer.Person
                 Rg = person.Rg,
                 Cpf = person.Cpf,
                 Name = person.Name,
+                BirthDate = person.BirthDate,
+                FatherName = person.FatherName,
                 MotherName = person.MotherName,
                 SocialName = person.SocialName,
-                FatherName = person.FatherName,
-                BirthDate = person.BirthDate,
                 PersonGenderId = person.PersonGenderId,
                 PersonAggregates = person.PersonAggregates,
             };

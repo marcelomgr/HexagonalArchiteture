@@ -55,7 +55,7 @@ namespace Application.Person.Dtos
                 BirthDate = person.BirthDate,
                 //Gender = person.Gender,
                 PersonGenderId = person.PersonGenderId,
-                //PersonGender = PersonGenderDto.MapToDto(person.PersonGender),
+                PersonGender = person.PersonGender == null ? null : PersonGenderDto.MapToDto(person.PersonGender),
                 PersonAggregates = person.PersonAggregates.Select(aggregates => PersonAggregateDto.MapToDto(aggregates)).ToList()
             };
         }

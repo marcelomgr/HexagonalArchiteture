@@ -1,0 +1,25 @@
+﻿@{
+    Layout = null;
+}
+
+@model MVC.Controllers.LoginController
+
+<link href="~/css/login.css" rel="stylesheet" />
+
+<div class="login-container" style="overflow: hidden">
+    <div class="header">
+        <h2>SPTC - Pessoas</h2>
+    </div>
+    <div class="logo-placeholder">
+        <img src="~/img/brasaopoliciacientifica_color.png" alt="Polícia Técnico-Científica" width="300px"  />
+    </div>
+    <form class="login-form">
+        <label for="username">Usuário</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit">Entrar</button>
+    </form>
+</div>

@@ -11,6 +11,7 @@ namespace Application.PersonAggregate.Dtos
         public int? RequisitionId { get; set; }
         public int ConsumerId { get; set; }
         public int SourceSystemId { get; set; }
+        public string SourceSystemDescription { get; set; }
 
         //public string? CondemnedRegister { get; set; }
         //public string? CondemnationArticle { get; set; }
@@ -19,7 +20,7 @@ namespace Application.PersonAggregate.Dtos
         //public DateTime? CondemnationDate { get; set; }
 
         public int PersonTypeId { get; set; }
-        //public PersonTypeDto? PersonType { get; set; }
+        public PersonTypeDto? PersonType { get; set; }
 
         public static Entities.PersonAggregate MapToEntity(PersonAggregateDto personAggregatesDto)
         {
@@ -53,12 +54,13 @@ namespace Application.PersonAggregate.Dtos
                 RequisitionId = personAggregates.RequisitionId,
                 ConsumerId = personAggregates.ConsumerId,
                 SourceSystemId = personAggregates.SourceSystemId,
+                SourceSystemDescription = Enum.GetName(typeof(SourceSystems), personAggregates.SourceSystemId),
                 PersonTypeId = personAggregates.PersonTypeId,
-                //PersonType = new PersonTypeDto()
-                //{
-                //    Id = personAggregates.PersonType.Id,
-                //    Description = personAggregates.PersonType.Description
-                //},
+                PersonType = personAggregates.PersonType == null ? null : new PersonTypeDto()
+                {
+                    Id = personAggregates.PersonType.Id,
+                    Description = personAggregates.PersonType.Description
+                },
             };
         }
     }

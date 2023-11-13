@@ -15,7 +15,7 @@ namespace Application.Person
     {
         private IPersonRepository _personRepository;
         private IChangeLogRepository _changeLogRepository;
-        
+
         public PersonManager(IPersonRepository personRepository, IChangeLogRepository changeLogRepository)
         {
             _personRepository = personRepository;
@@ -43,6 +43,10 @@ namespace Application.Person
             foreach (var item in persons)
             {
                 PersonDto dto = PersonDto.MapToDto(item);
+
+                var changeLogs = await _changeLogRepository.GetChangeLogsByPersonId(dto.Id);
+                dto.ChangeLogs = changeLogs.Select(ChangeLogDto.MapToDto).OrderByDescending(l => l.Id).ToList();
+
                 personsDto.Add(dto);
             }
 
@@ -67,13 +71,13 @@ namespace Application.Person
             }
 
             var personDto = PersonDto.MapToDto(person);
+
             var changeLogs = await _changeLogRepository.GetChangeLogsByPersonId(personDto.Id);
             personDto.ChangeLogs = changeLogs.Select(ChangeLogDto.MapToDto).OrderByDescending(l => l.Id).ToList();
 
             return new PersonResponse
             {
                 Data = personDto,
-                //Data = PersonDto.MapToDto(person),
                 Success = true,
             };
         }

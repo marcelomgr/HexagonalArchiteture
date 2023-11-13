@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.PersonAggregate.Dtos;
+using Domain.Entities;
 
 namespace MVC.Dtos
 {
@@ -14,6 +15,6 @@ namespace MVC.Dtos
         public long Cpf { get; set; }
         public DateTime? BirthDate { get; set; }
         public string? Gender { get; set; }
-        public PersonAggregate PersonAggregate { get; set; }
+        public PersonAggregateDto PersonAggregate { get; set; }
     }
 }

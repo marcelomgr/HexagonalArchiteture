@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="~/lib/jquery-ui/css/jquery-ui.min.css" />
 <link href="~/lib/sweet-alert/css/sweetalert2.min.css" rel="stylesheet" />
 <link href="~/lib/bootstrap/dist/css/bootstrap-datepicker.css" rel="stylesheet" />
+<link href="~/lib/spin/css/spin.css" rel="stylesheet" />
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/jquery-input-mask/js/jquery.mask.min.js"></script>
@@ -16,9 +17,12 @@
 <script src="~/lib/sweet-alert/js/sweetalert2.all.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap-datepicker.js"></script>
 <script src="~/js/person.js" asp-append-version="true"></script>
+<script src="~/lib/spin/js/spin.min.js"></script>
 
 <div class="container">
-
+    <div class="overlay">
+        <div id="spinner"></div>
+    </div>
     <!-- Seção Header -->
     <div class="row">
         <div class="col-6">
@@ -78,7 +82,7 @@
                         <input type="text" id="Cpf" name="Cpf" class="form-control cpf">
                     </div>
                 </div>
-                
+
                 <hr>
 
                 <!-- Botões de Ação -->
@@ -87,11 +91,6 @@
                         <i class="fas fa-arrow-left"></i> Voltar
                     </button>
                     <div class="d-flex justify-content-between">
-                        <div id="loading-spinner" class="d-none">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Carregando...</span>
-                            </div>
-                        </div>
                         <button type="reset" class="btn btn-secondary me-2">
                             <i class="fas fa-trash"></i> Limpar
                         </button>
@@ -154,7 +153,7 @@
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label>Gênero:</label>
-                            @* <input type="text" id="GenderSave" name="GenderSave" class="form-control"> *@
+                                @* <input type="text" id="GenderSave" name="GenderSave" class="form-control"> *@
                                 <select id="GenderSave" name="GenderSave" class="form-control"></select>
                             </div>
                             <div class="col-md-4">
@@ -214,49 +213,85 @@
                 </div>
                 <div class="modal-body">
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="NameView">Nome:</label>
-                            <span id="NameView" class="formatted-text"></span>
+                    <div class="container">
+                        <div class="row mb-3">
+                            <div class="col-md-8 grupo-label-valor">
+                                <label for="NameView" class="rotulo2 fw-bold">Nome:</label>
+                                <span id="NameView" class="formatted-text"></span>
+                            </div>
+                            <div class="col-md-4 grupo-label-valor">
+                                <label for="BirthDateView" class="rotulo2 fw-bold">Nascimento:</label>
+                                <span id="BirthDateView" class="formatted-text"></span>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="BirthDateView">Nascimento:</label>
-                            <span id="BirthDateView" class="formatted-text"></span>
+
+                        <div class="row mb-3 bg-light">
+                            <div class="col-md-4 grupo-label-valor">
+                                <label for="GenderView" class="rotulo2 fw-bold">Gênero:</label>
+                                <span id="GenderView" class="formatted-text"></span>
+                            </div>
+                            <div class="col-md-4 grupo-label-valor">
+                                <label for="RgView" class="rotulo2 fw-bold">RG:</label>
+                                <span id="RgView" class="formatted-text"></span>
+                            </div>
+                            <div class="col-md-4 grupo-label-valor">
+                                <label for="CpfView" class="rotulo2 fw-bold">CPF:</label>
+                                <span id="CpfView" class="formatted-text"></span>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="GenderView">Gênero:</label>
-                            <span id="GenderView" class="formatted-text"></span>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 grupo-label-valor">
+                                <label for="MotherNameView" class="rotulo2 fw-bold">Nome da Mãe:</label>
+                                <span id="MotherNameView" class="formatted-text"></span>
+                            </div>
+                            <div class="col-md-6 grupo-label-valor">
+                                <label for="FatherNameView" class="rotulo2 fw-bold">Nome do Pai:</label>
+                                <span id="FatherNameView" class="formatted-text"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3 bg-light">
+                            <div class="col-md-12 grupo-label-valor">
+                                <label for="SocialNameView" class="rotulo2 fw-bold">Nome Social:</label>
+                                <span id="SocialNameView" class="formatted-text"></span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="MotherNameView">Nome da Mãe:</label>
-                            <span id="MotherNameView" class="formatted-text"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="FatherNameView">Nome do Pai:</label>
-                            <span id="FatherNameView" class="formatted-text"></span>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="SocialNameView">Nome Social:</label>
-                            <span id="SocialNameView" class="formatted-text"></span>
-                        </div>
-                    </div>
+                    <hr id="logSectionSeparator"><br />
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="RgView">RG:</label>
-                            <span id="RgView" class="formatted-text rg"></span>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="CpfView">CPF:</label>
-                            <span id="CpfView" class="formatted-text cpf"></span>
-                        </div>
+                    <div id="AggregationsSection">
+                        <table id="aggregationsTable" class="display">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Tipo de Pessoa</th>
+                                    <th>Sistema</th>
+                                    <th>Requisição</th>
+                                    <th>Usuário</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <hr style="display: none;" id="logSectionSeparator">
-                    <div id="logSection" style="display: none;">
+    <div class="modal fade" id="personLogsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 130% !important; margin: 0 auto;">
+                <div class="modal-header">
+                    <h5 class="modal-title">Logs de Alteração</h5>
+                    <button type="button" class="closeLogs" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div id="logSection">
                         <table id="logTable" class="display">
                             <thead>
                                 <tr>
@@ -276,5 +311,4 @@
             </div>
         </div>
     </div>
-
 </div>
