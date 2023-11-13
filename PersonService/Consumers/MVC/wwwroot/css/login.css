@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background-image: url('../img/gray-login-background.jpg'); /* Substitua 'textura.png' pelo caminho da sua textura */
+    background-image: url('../img/gray-login-background.jpg');
     background-size: cover;
 }
 
@@ -15,24 +15,23 @@
 }
 
 .header {
-    width: 100%; /* Largura de 100% em relação à div .login-container */
-    background-color: #f8f9fa; /* Cor de fundo mais leve */
-    color: #495057; /* Cor do texto mais suave */
+    width: 100%;
+    background-color: #f8f9fa;
+    color: #495057;
     padding: 15px;
     text-align: center;
     font-size: 24px;
     font-weight: bold;
-    border-radius: 8px; /* Bordas arredondadas */
+    border-radius: 8px;
     margin-bottom: 20px;
 }
 
 .logo-placeholder {
-    /* Estilize conforme necessário */
     margin-bottom: 20px;
 }
 
 .login-form {
-    background-color: rgba(255, 255, 255, 0.9); /* Cor de fundo do formulário com opacidade */
+    background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -42,7 +41,7 @@
 label {
     display: block;
     margin-bottom: 8px;
-    color: #333; /* Cor do texto dos rótulos */
+    color: #333;
 }
 
 input {
@@ -50,13 +49,13 @@ input {
     padding: 10px;
     margin-bottom: 15px;
     box-sizing: border-box;
-    border: 1px solid #ccc; /* Cor da borda dos campos de entrada */
+    border: 1px solid #ccc;
     border-radius: 4px;
 }
 
 button {
-    background-color: #007BFF; /* Cor de fundo do botão */
-    color: #fff; /* Cor do texto do botão */
+    background-color: #007BFF;
+    color: #fff;
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -65,5 +64,5 @@ button {
 }
 
     button:hover {
-        background-color: #0056b3; /* Cor de fundo do botão ao passar o mouse */
+        background-color: #0056b3;
     }
