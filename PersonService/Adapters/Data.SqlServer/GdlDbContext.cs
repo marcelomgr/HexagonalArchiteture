@@ -4,12 +4,14 @@ using Entities = Domain.Entities;
 using Data.SqlServer.PersonGender;
 using Microsoft.EntityFrameworkCore;
 using Data.SqlServer.PersonAggregate;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Data.SqlServer
 {
-    public class GdlDbContext : DbContext
+    public class GdlDbContext : IdentityDbContext<IdentityUser>
     {
-        public GdlDbContext(DbContextOptions<GdlDbContext> options) : base(options) { }
+        public GdlDbContext(DbContextOptions options) : base(options) { }
 
         public virtual DbSet<Entities.Person> Persons { get; set; }
         public virtual DbSet<Entities.PersonType> PersonTypes { get; set; }
@@ -19,6 +21,8 @@ namespace Data.SqlServer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PersonGenderConfiguration());

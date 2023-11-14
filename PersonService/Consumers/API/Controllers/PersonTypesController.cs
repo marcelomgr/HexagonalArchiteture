@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.PersonType.Ports;
 using PersonTypeDto = Application.PersonType.Dtos.PersonTypeDto;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class PersonTypesController : Controller
@@ -29,7 +31,8 @@ namespace API.Controllers
             return NotFound(res);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("GetPersonTypeById")]
         public async Task<ActionResult> GetPersonTypeById(int id)
         {
             var response = await _personTypeManager.GetPersonTypeById(id);

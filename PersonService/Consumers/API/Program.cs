@@ -1,4 +1,5 @@
-using Application;
+using API;
+using System.Text;
 using Data.SqlServer;
 using Application.Person;
 using Domain.Person.Ports;
@@ -14,8 +15,11 @@ using Domain.PersonGender.Ports;
 using Data.SqlServer.PersonGender;
 using Application.PersonType.Ports;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using System.Text.Json.Serialization;
 using Application.PersonGender.Ports;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +39,39 @@ builder.Services.AddScoped<IPersonGenderRepository, PersonGenderRepository>();
 
 builder.Services.AddScoped<IChangeLogRepository, ChangeLogRepository>();
 # endregion
+
+# region Identity Configuration
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<GdlDbContext>()
+    .AddDefaultTokenProviders();
+#endregion
+
+# region Jwt
+var appSettingsSection = builder.Configuration.GetSection("AppSettings");
+builder.Services.Configure<AppSettings>(appSettingsSection);
+
+var appSettings = appSettingsSection.Get<AppSettings>();
+var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = true;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = appSettings.ValidIn,
+        ValidIssuer = appSettings.Issuer
+    };
+});
+#endregion
 
 # region DB wiring up
 var connectionString = builder.Configuration.GetConnectionString("Main");
@@ -60,6 +97,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
