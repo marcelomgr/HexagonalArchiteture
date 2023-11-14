@@ -20,6 +20,8 @@ using System.Text.Json.Serialization;
 using Application.PersonGender.Ports;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,7 +83,38 @@ builder.Services.AddDbContext<GdlDbContext>(
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pessoas - API", Version = "v1" });
+
+    // Adicione um filtro global para adicionar o campo de cabeçalho de autorização
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Cabeçalho de autorização JWT usando o esquema Bearer. Digite 'Bearer' [espaço] e depois seu token na entrada de texto abaixo.",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] { }
+        }
+    });
+});
+
 
 builder.Services.AddControllersWithViews()
                 .AddJsonOptions(options =>
@@ -89,11 +122,32 @@ builder.Services.AddControllersWithViews()
 
 var app = builder.Build();
 
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "StaticFiles")),
+    RequestPath = "/StaticFiles"
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    //app.UseSwaggerUI();
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pessoas API");
+        c.RoutePrefix = "swagger";
+
+        c.ConfigObject.AdditionalItems["syntaxHighlight"] = false; // Desabilita o destaque de sintaxe
+        c.ConfigObject.AdditionalItems["displayRequestDuration"] = true; // Exibe a duração das solicitações
+
+        // Remove a caixa de seleção do esquema (topo direito)
+        c.InjectStylesheet("/StaticFiles/swagger-ui/custom.css");
+
+
+    });
 }
 
 app.UseHttpsRedirection();

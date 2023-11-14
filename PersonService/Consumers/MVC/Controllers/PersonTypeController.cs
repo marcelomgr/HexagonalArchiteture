@@ -26,7 +26,7 @@ namespace MVC.Controllers
             return NotFound(res);
         }
 
-        [HttpGet("{id}")]
+        //[HttpGet("GetPersonTypeById")]
         public async Task<ActionResult> GetPersonTypeById(int id)
         {
             var response = await _personTypeManager.GetPersonTypeById(id);

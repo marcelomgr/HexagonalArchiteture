@@ -31,8 +31,7 @@ namespace API.Controllers
             return NotFound(res);
         }
 
-        [HttpGet]
-        [Route("GetPersonTypeById")]
+        [HttpGet("{id}")]
         public async Task<ActionResult> GetPersonTypeById(int id)
         {
             var response = await _personTypeManager.GetPersonTypeById(id);
