@@ -11,16 +11,46 @@
         },
     });
 
-    var logTable = new DataTable('#logTable', {
+    var logTable = $('#logTable').DataTable({
         language: {
             url: '/lib/datatables/json/pt-BR.json',
         },
+        columnDefs: [
+            {
+                targets: 0,
+                type: 'date',
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return formatDateTime(data);
+                    }
+                    return data;
+                }
+            }
+        ],
+        order: [
+            [0, 'desc']
+        ]
     });
 
     var aggregationsTable = new DataTable('#aggregationsTable', {
         language: {
             url: '/lib/datatables/json/pt-BR.json',
         },
+        columnDefs: [
+            {
+                targets: 0,
+                type: 'date',
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return formatDateTime(data);
+                    }
+                    return data;
+                }
+            }
+        ],
+        order: [
+            [0, 'desc']
+        ]
     });
 
 
@@ -28,7 +58,6 @@
 
     $('.cpf').mask('000.000.000-00', { reverse: true });
     $('.rg').mask('00.000.000-0', { reverse: true });
-
     $('.datepicker').datepicker({
         dateFormat: 'dd/mm/yy',
         dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
@@ -39,13 +68,12 @@
         nextText: 'Proximo',
         prevText: 'Anterior'
     });
-
     $(".datepicker").mask("99/99/9999");
 
     var aggregate = [
         {
             "userId": 1,
-            "requisitionId": 1,
+            "requisitionId": 2,
             "consumerId": 1,
             "sourceSystemId": 1
         }
@@ -309,10 +337,11 @@
                 if (logData.length > 0) {
                     //document.getElementById('logSectionSeparator').style.display = 'block';
                     //document.getElementById('logSection').style.display = 'block';
-
                     logData.forEach(function (log) {
+                        console.log(log)
                         logTable.row.add([
-                            formatDateTime(log.created),
+                            log.created,
+                            //formatDateTime(log.created),
                             log.propertyName,
                             log.oldValue,
                             log.newValue,

@@ -43,6 +43,7 @@ namespace MVC.Controllers
 
             if (response.Success)
             {
+                response.Data.ChangeLogs = response.Data.ChangeLogs.OrderByDescending(l => l.Created).ToList();
                 var data = response.Data;
                 return Json(data);
             }

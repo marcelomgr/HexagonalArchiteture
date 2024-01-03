@@ -31,6 +31,7 @@ namespace Domain.Entities
         //[PortugueseDescription("Gênero")]
         //public string? GenderDescription { get; set; }
         public int PersonGenderId { get; set; }
+        [PortugueseDescription("Gênero")]
         public PersonGender PersonGender { get; set; }
 
         public List<PersonAggregate> PersonAggregates { get; set; }

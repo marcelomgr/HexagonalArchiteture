@@ -1,6 +1,8 @@
 ﻿using Domain;
 using Domain.Entities;
 using Domain.Person.Ports;
+using Domain.PersonGender.Ports;
+using Domain.System.Ports;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -9,9 +11,12 @@ namespace Data.SqlServer.Person
     public class PersonRepository : IPersonRepository
     {
         private readonly GdlDbContext _gdlDbContext;
-        public PersonRepository(GdlDbContext gdlDbContext)
+        private IPersonGenderRepository _personGenderRepository;
+
+        public PersonRepository(GdlDbContext gdlDbContext, IPersonGenderRepository personGenderRepository)
         {
             _gdlDbContext = gdlDbContext;
+            _personGenderRepository = personGenderRepository;
         }
 
         public async Task Update(Domain.Entities.Person person)
@@ -30,6 +35,9 @@ namespace Data.SqlServer.Person
                 existingPerson.FatherName = person.FatherName;
                 existingPerson.BirthDate = person.BirthDate;
                 existingPerson.PersonGenderId = person.PersonGenderId;
+                //existingPerson.PersonGender = person.PersonGender;
+
+                existingPerson.PersonGender = await _personGenderRepository.GetById(person.PersonGenderId);
 
                 // Verifica se há um PersonAggregate correspondente na requisição
                 var updatedPersonAggregate = person.PersonAggregates.FirstOrDefault();
@@ -140,34 +148,94 @@ namespace Data.SqlServer.Person
 
             foreach (var propertyInfo in typeof(Domain.Entities.Person).GetProperties())
             {
-                if (propertyInfo.Name != "Id" && propertyInfo.Name != "Created")
+                if (propertyInfo.Name != "Id" && propertyInfo.Name != "Created" && propertyInfo.Name != "PersonGenderId")
                 {
                     var originalValue = propertyInfo.GetValue(originalPerson);
                     var updatedValue = propertyInfo.GetValue(updatedPerson);
 
                     if (!object.Equals(originalValue, updatedValue))
                     {
-                        var changeLog = new Domain.Entities.ChangeLog
+                        if (propertyInfo.PropertyType == typeof(Domain.Entities.PersonGender))
                         {
-                            Created = changeDate,
-                            EntityName = entityType,
-                            EntityId = entityId,
-                            PropertyName = GetDescription(propertyInfo),
-                            OldValue = originalValue != null ? originalValue.ToString() : string.Empty,
-                            NewValue = updatedValue != null ? updatedValue.ToString() : string.Empty,
-                            UserId = aggregate.UserId,
-                            ConsumerId = aggregate.ConsumerId,
-                            SourceSystemId = aggregate.SourceSystemId,
-                            SourceSystemName = SourceSystems.GetName(typeof(SourceSystems), aggregate.SourceSystemId)
-                        };
+                            var originalPersonGenderDescription = ((Domain.Entities.PersonGender)originalValue)?.Description;
+                            var updatedPersonGenderDescription = ((Domain.Entities.PersonGender)updatedValue)?.Description;
 
-                        _gdlDbContext.ChangeLogs.Add(changeLog);
+                            if (originalPersonGenderDescription != updatedPersonGenderDescription)
+                            {
+                                var changeLog = new Domain.Entities.ChangeLog
+                                {
+                                    Created = changeDate,
+                                    EntityName = entityType,
+                                    EntityId = entityId,
+                                    PropertyName = GetDescription(propertyInfo),
+                                    OldValue = originalPersonGenderDescription ?? string.Empty,
+                                    NewValue = updatedPersonGenderDescription ?? string.Empty,
+                                    UserId = aggregate.UserId,
+                                    ConsumerId = aggregate.ConsumerId,
+                                    SourceSystemId = aggregate.SourceSystemId,
+                                    SourceSystemName = SourceSystems.GetName(typeof(SourceSystems), aggregate.SourceSystemId)
+                                };
+
+                                _gdlDbContext.ChangeLogs.Add(changeLog);
+                            }
+                        }
+                        else
+                        {
+                            var changeLog = new Domain.Entities.ChangeLog
+                            {
+                                Created = changeDate,
+                                EntityName = entityType,
+                                EntityId = entityId,
+                                PropertyName = GetDescription(propertyInfo),
+                                OldValue = originalValue != null ? originalValue.ToString() : string.Empty,
+                                NewValue = updatedValue != null ? updatedValue.ToString() : string.Empty,
+                                UserId = aggregate.UserId,
+                                ConsumerId = aggregate.ConsumerId,
+                                SourceSystemId = aggregate.SourceSystemId,
+                                SourceSystemName = SourceSystems.GetName(typeof(SourceSystems), aggregate.SourceSystemId)
+                            };
+
+                            _gdlDbContext.ChangeLogs.Add(changeLog);
+                        }
                     }
                 }
             }
+
+
+            //    foreach (var propertyInfo in typeof(Domain.Entities.Person).GetProperties())
+            //    {
+            //        if (propertyInfo.Name != "Id" && propertyInfo.Name != "Created" && propertyInfo.Name != "PersonGender")
+            //        {
+            //            var originalValue = propertyInfo.GetValue(originalPerson);
+            //            var updatedValue = propertyInfo.GetValue(updatedPerson);
+
+            //            if (!object.Equals(originalValue, updatedValue))
+            //            {
+            //                var changeLog = new Domain.Entities.ChangeLog
+            //                {
+            //                    Created = changeDate,
+            //                    EntityName = entityType,
+            //                    EntityId = entityId,
+            //                    PropertyName = GetDescription(propertyInfo),
+            //                    OldValue = originalValue != null ? originalValue.ToString() : string.Empty,
+            //                    NewValue = updatedValue != null ? updatedValue.ToString() : string.Empty,
+            //                    UserId = aggregate.UserId,
+            //                    ConsumerId = aggregate.ConsumerId,
+            //                    SourceSystemId = aggregate.SourceSystemId,
+            //                    SourceSystemName = SourceSystems.GetName(typeof(SourceSystems), aggregate.SourceSystemId)
+            //                };
+
+            //                _gdlDbContext.ChangeLogs.Add(changeLog);
+            //            }
+            //        }
+            //        else if (propertyInfo.Name != "PersonGender")
+            //        {
+
+            //        }
+            //    }
         }
 
-        private Domain.Entities.Person ClonePerson(Domain.Entities.Person person)
+    private Domain.Entities.Person ClonePerson(Domain.Entities.Person person)
         {
             var originalPerson = new Domain.Entities.Person
             {
@@ -180,6 +248,7 @@ namespace Data.SqlServer.Person
                 SocialName = person.SocialName,
                 PersonGenderId = person.PersonGenderId,
                 PersonAggregates = person.PersonAggregates,
+                PersonGender = person.PersonGender,
             };
 
             return originalPerson;
@@ -188,7 +257,7 @@ namespace Data.SqlServer.Person
         private string GetDescription(PropertyInfo propertyInfo)
         {
             var customAttributes = propertyInfo.GetCustomAttributesData();
-            var descriptionAttribute = customAttributes.FirstOrDefault();
+            var descriptionAttribute = customAttributes.LastOrDefault();
 
             if (descriptionAttribute != null)
             {

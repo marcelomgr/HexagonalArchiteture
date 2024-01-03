@@ -9,6 +9,7 @@ namespace Domain.Entities
     public class PersonGender
     {
         public int Id { get; set; }
+        [PortugueseDescription("Gênero")]
         public string Description { get; set; }
     }
 }
