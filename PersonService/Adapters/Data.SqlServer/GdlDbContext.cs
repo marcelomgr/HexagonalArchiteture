@@ -6,13 +6,18 @@ using Microsoft.EntityFrameworkCore;
 using Data.SqlServer.PersonAggregate;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Data.SqlServer.System;
 
 namespace Data.SqlServer
 {
-    public class GdlDbContext : IdentityDbContext<IdentityUser>
+    //public class GdlDbContext : IdentityDbContext<IdentityUser>
+
+    public class GdlDbContext : DbContext
     {
+        public GdlDbContext(DbContextOptions<GdlDbContext> options) : base(options) { }
         public GdlDbContext(DbContextOptions options) : base(options) { }
 
+        public virtual DbSet<Entities.System> Systems { get; set; }
         public virtual DbSet<Entities.Person> Persons { get; set; }
         public virtual DbSet<Entities.PersonType> PersonTypes { get; set; }
         public virtual DbSet<Entities.PersonGender> PersonGenders { get; set; }
@@ -23,6 +28,7 @@ namespace Data.SqlServer
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.ApplyConfiguration(new SystemConfiguration());
             modelBuilder.ApplyConfiguration(new PersonConfiguration());
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration());
             modelBuilder.ApplyConfiguration(new PersonGenderConfiguration());

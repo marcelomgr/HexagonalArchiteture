@@ -1,4 +1,7 @@
-﻿namespace Domain
+﻿using System.Security.Cryptography;
+using System.Text;
+
+namespace Domain
 {
     public static class Utils
     {
@@ -40,6 +43,26 @@
             digito = digito + resto.ToString();
 
             return cpfString.EndsWith(digito);
+        }
+
+        public static string EncryptKey(string key)
+        {
+            // Lógica para criptografar a chave
+            // Implementação específica de criptografia
+            // Exemplo simplificado usando a classe MD5
+            using (var md5 = MD5.Create())
+            {
+                var inputBytes = Encoding.ASCII.GetBytes(key);
+                var hashBytes = md5.ComputeHash(inputBytes);
+
+                var sb = new StringBuilder();
+                for (var i = 0; i < hashBytes.Length; i++)
+                {
+                    sb.Append(hashBytes[i].ToString("x2"));
+                }
+
+                return sb.ToString();
+            }
         }
     }
 }
