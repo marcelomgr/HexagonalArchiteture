@@ -7,7 +7,7 @@ using Application.User.Dtos;
 using Data.SqlServer;
 using Domain;
 using Domain.Entities;
-using Microsoft.AspNetCore.Identity;
+//using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -22,32 +22,47 @@ namespace API.Controllers
     [Route("[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        //private readonly SignInManager<IdentityUser> _signInManager;
+        //private readonly UserManager<IdentityUser> _userManager;
         //private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
         private readonly ISystemManager _systemManager;
 
-        public AuthController(SignInManager<IdentityUser> signInManager,
-                              UserManager<IdentityUser> userManager,
-                              IOptions<AppSettings> appSettings,
+        //public AuthController(SignInManager<IdentityUser> signInManager,
+        //                      UserManager<IdentityUser> userManager,
+        //                      IOptions<AppSettings> appSettings,
+        //                      ISystemManager systemManager)
+
+        public AuthController(IOptions<AppSettings> appSettings,
                               ISystemManager systemManager)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
             _appSettings = appSettings.Value;
             _systemManager = systemManager;
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> Register(SystemDto system)
+        public async Task<IActionResult> Register(SystemInputDto systemInput)
         {
-            system.ApiKey = Utils.EncryptKey(system.Name);
-            system.EncryptedApiKey = Utils.EncryptKey(system.ApiKey);
+            SystemDto systemDto = new SystemDto()
+            {
+                Name = systemInput.Name,
+                AllowedIPs = systemInput.AllowedIPs,
+                ApiKey = Utils.EncryptKey(systemInput.Name),
+                EncryptedApiKey = Utils.EncryptKey(Utils.EncryptKey(systemInput.Name)),
+            };
 
-            var res = await _systemManager.CreateSystem(system);
+            var res = await _systemManager.CreateSystem(systemDto);
 
-            if (res.Success) return Ok(res.Data);
+            if (res.Success)
+            {
+                var systemDetails = new
+                {
+                    Success = true,
+                    Data = new { Id = res.Data.Id, ApiKey = res.Data.ApiKey },
+                };
+
+                return Ok(systemDetails);
+            }
 
             return BadRequest();
         }
@@ -79,10 +94,10 @@ namespace API.Controllers
 
             var allowedIPs = system.Data.AllowedIPs.Split(',');
 
-            if (!allowedIPs.Contains(requestingIP))
-            {
-                return Unauthorized("IP not allowed");
-            }
+            //if (!allowedIPs.Contains(requestingIP))
+            //{
+            //    return Unauthorized("IP not allowed");
+            //}
 
             var token = GerarJwt(system.Data);
 
@@ -95,10 +110,12 @@ namespace API.Controllers
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Issuer = systemDto.ApiKey,
-                Audience = _appSettings.ValidIn,
+                //Issuer = systemDto.Id.ToString(),
+                Issuer = _appSettings.Issuer,
+                Audience = _appSettings.ValidIn, //
                 Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationInHours),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                
             };
 
             return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));

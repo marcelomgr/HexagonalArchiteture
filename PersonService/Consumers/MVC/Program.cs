@@ -15,6 +15,10 @@ using Application.PersonGender.Ports;
 using Application.PersonGender;
 using Data.SqlServer.PersonGender;
 using Domain.PersonGender.Ports;
+using Application.System.Ports;
+using Application.System;
+using Data.SqlServer.System;
+using Domain.System.Ports;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +26,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 # region IoC
+builder.Services.AddScoped<ISystemManager, SystemManager>();
+builder.Services.AddScoped<ISystemRepository, SystemRepository>();
 builder.Services.AddScoped<IPersonManager, PersonManager>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonTypeManager, PersonTypeManager>();

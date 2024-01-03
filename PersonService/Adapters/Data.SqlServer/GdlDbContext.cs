@@ -4,8 +4,6 @@ using Entities = Domain.Entities;
 using Data.SqlServer.PersonGender;
 using Microsoft.EntityFrameworkCore;
 using Data.SqlServer.PersonAggregate;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Data.SqlServer.System;
 
 namespace Data.SqlServer
@@ -15,7 +13,7 @@ namespace Data.SqlServer
     public class GdlDbContext : DbContext
     {
         public GdlDbContext(DbContextOptions<GdlDbContext> options) : base(options) { }
-        public GdlDbContext(DbContextOptions options) : base(options) { }
+        //public GdlDbContext(DbContextOptions options) : base(options) { }
 
         public virtual DbSet<Entities.System> Systems { get; set; }
         public virtual DbSet<Entities.Person> Persons { get; set; }

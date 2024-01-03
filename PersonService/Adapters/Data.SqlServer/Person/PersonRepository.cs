@@ -2,7 +2,6 @@
 using Domain.Entities;
 using Domain.Person.Ports;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
 
 namespace Data.SqlServer.Person

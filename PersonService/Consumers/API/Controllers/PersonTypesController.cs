@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.PersonType.Ports;
-using PersonTypeDto = Application.PersonType.Dtos.PersonTypeDto;
 using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers

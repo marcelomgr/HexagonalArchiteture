@@ -34,4 +34,17 @@ namespace Application.System.Dtos
             };
         }
     }
+
+    public class SystemInputDto
+    {
+        public string Name { get; set; }
+        public string AllowedIPs { get; set; }
+    }
+
+    // Classe para enviar dados na resposta
+    public class SystemOutputDto
+    {
+        public int Id { get; set; }
+        public string ApiKey { get; set; }
+    }
 }
